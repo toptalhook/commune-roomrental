@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React, { Suspense} from "react";
 import Logo from "./Logo";
 import Search from "./Search";
 import Categories from "./Categories";
