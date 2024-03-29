@@ -1,5 +1,5 @@
 import React, { Suspense} from "react";
-import Logo from "./Logo";
+import Logo from "./logo";
 import Search from "./Search";
 import Categories from "./Categories";
 import UserMenu from "./UserMenu";
