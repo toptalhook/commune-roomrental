@@ -4,6 +4,7 @@ import "./globals.css";
 import "react-loading-skeleton/dist/skeleton.css";
 import Navbar from "@/components/navbar";
 import Providers from "@/components/Provider";
+import { usePathname } from "next/navigation";
 
 const nunito = Nunito({ subsets: ["latin"] });
 
@@ -18,12 +19,13 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+
   return (
     <html lang="en">
       <body className={nunito.className}>
         <Providers>
           <Navbar />
-          <main className="pb-16 md:pt-28 pt-24">{children}</main>
+          <main >{children}</main>
         </Providers>
       </body>
     </html>

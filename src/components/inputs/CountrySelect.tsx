@@ -42,7 +42,7 @@ const CountrySelect = ({
       onChange={handleChange}
       formatOptionLabel={(option: any) => (
         <div className="flex flex-row items-center gap-3 z-[10]">
-          <div>{option.flag}</div>
+          <div className="text-neutral-500 ">{option.label}</div>
           <div>
             {option.lsabel},
             <span className="text-neutral-500 ml-1">{option.region}</span>

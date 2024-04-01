@@ -32,7 +32,7 @@ const ListingMenu: FC<ListingMenuProps> = ({ id }) => {
   });
   const [isLoading, startTransition] = useTransition();
 
-  if (pathname === "/" || pathname === "/favorites") return null;
+  if (pathname === "/listings" || pathname === "/favorites") return null;
 
   const onConfirm = (onModalClose?: () => void) => {
     startTransition(() => {
