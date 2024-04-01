@@ -13,6 +13,7 @@ import { formatPrice } from "@/utils/helper";
 import ListingMenu from "./ListingMenu";
 import { GrFormNext } from "react-icons/gr";
 import { GrFormPrevious } from "react-icons/gr";
+import { SlLocationPin } from "react-icons/sl";
 
 interface ListingCardProps {
   data: Listing;
@@ -47,7 +48,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
   }
 
   return (
-    <div className="relative">
+    <div className="relative shadow-lg md:rounded-b-lg rounded-b-md hover:cursor-pointer">
       <div className="absolute top-0 left-0 p-3 flex items-center justify-between w-full">
         <div className="z-5">
           <ListingMenu id={reservation?.id || data.id} />
@@ -63,7 +64,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
       </div>
 
       <div className="flex flex-col gap-1 w-full" >
-        <div className=" overflow-hidden md:rounded-xl rounded-md" onMouseEnter={() => { setShowButton(true) }} onMouseLeave={() => {
+        <div className=" overflow-hidden md:rounded-t-lg rounded-t-md" onMouseEnter={() => { setShowButton(true) }} onMouseLeave={() => {
           setShowButton(false)
         }}>
           <div className="aspect-[1/0.95] relative bg-gray-100">
@@ -94,18 +95,21 @@ const ListingCard: React.FC<ListingCardProps> = ({
 
           </div>
         </div>
-        <span className="font-semibold text-[16px] mt-[4px]">
-          {data?.region}, {data?.country}
-        </span>
-        <span className="font-light text-neutral-500 text-sm">
-          {reservationDate || data.category}
-        </span>
-
-        <div className="flex flex-row items-baseline gap-1">
-          <span className="font-bold text-[#444] text-[14px]">
-            $ {formatPrice(price)}
+        <div className="p-[5px]">
+          <span className="font-semibold text-[16px] mt-[4px] flex gap-x-[10px]  items-center">
+            <SlLocationPin />
+            {data?.region}, {data?.country}
           </span>
-          {!reservation && <span className="font-light">night</span>}
+          <span className="font-light text-neutral-500 text-sm">
+            {reservationDate || data.category}
+          </span>
+
+          <div className="flex flex-row items-baseline gap-1">
+            <span className="font-bold text-[#444] text-[14px]">
+              $ {formatPrice(price)}
+            </span>
+            {!reservation && <span className="font-light">night</span>}
+          </div>
         </div>
       </div>
       {/* </Link> */}

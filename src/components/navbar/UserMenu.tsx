@@ -12,9 +12,10 @@ import RentModal from "../modals/RentModal";
 import Modal from "../modals/Modal";
 import AuthModal from "../modals/AuthModal";
 import { menuItems } from "@/utils/constants";
+import { BsHouseHeartFill } from "react-icons/bs";
 
 interface UserMenuProps {
-  user?:  User & {
+  user?: User & {
     id: string;
   };
 }
@@ -30,22 +31,26 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
     <div className="relative">
       <div className="flex flex-row items-center gap-3">
         <Modal>
-        
-            <button
+
+          {/* <button
               type="button"
               className="hidden md:block text-sm font-bold py-3 px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer text-[#585858]"
               onClick={() => {router.push('/listings')}}
             >
               List homes
-            </button>
-          
+            </button> */}
+          <div onClick={() => {router.push('/listings')}} className="ml-[20px]">
+            <BsHouseHeartFill className="w-[20px] h-[20px] hover:cursor-pointer" />
+          </div>
+
+
           <Menu>
             <Menu.Toggle id="user-menu">
               <button
                 type="button"
                 className=" p-4 md:py-1 md:px-2 border-[1px]   border-neutral-200  flex  flex-row  items-center   gap-3   rounded-full   cursor-pointer   hover:shadow-md   transition duration-300"
               >
-                <AiOutlineMenu />
+                <AiOutlineMenu className="w-[15px] h-[15px]"/>
                 <div className="hidden md:block">
                   <Avatar src={user?.image} />
                 </div>

@@ -31,7 +31,7 @@ const Counter: React.FC<CounterProps> = ({
   };
 
   return (
-    <div className="flex flex-row items-center justify-between">
+    <div className="flex flex-row items-center justify-between gap-x-[15px]">
       <div className="flex flex-col">
         <h3 className="font-semibold">{title}</h3>
         <p className="font-light text-gray-600 text-[15.5px]">{subtitle}</p>

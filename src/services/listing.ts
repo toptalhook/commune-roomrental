@@ -12,7 +12,7 @@ export const getListings = async (query?: {
       roomCount,
       guestCount,
       bathroomCount,
-      country,
+      country, 
       startDate,
       endDate,
       category,
