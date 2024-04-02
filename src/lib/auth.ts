@@ -1,10 +1,43 @@
 import bcrypt from "bcrypt";
-import { AuthOptions } from "next-auth";
+import { AuthOptions, RequestInternal  } from "next-auth";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { ethers } from "ethers";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
 import { db } from "./db";
+
+async function authorizeCrypto(
+  credentials: Record<"walletAddress" | "signedNonce", string> | undefined,
+  req: Pick<RequestInternal, "body" | "headers" | "method" | "query">
+) {
+  if (!credentials) return null;
+
+  const { walletAddress, signedNonce } = credentials;
+
+  // Get user from database with their generated nonce
+  const user = await db.user.findUnique({
+    where: { walletAddress },
+  });
+
+  if (!user?.walletAddress) return null;
+
+  const verifyNonce = "Welcome to sign in ComHouse!";
+  // Compute the signer address from the saved nonce and the received signature
+  const signerAddress = ethers.verifyMessage(
+    verifyNonce,
+    signedNonce
+  );
+
+  // Check that the signer address matches the public address
+  //  that is trying to sign in
+  if (signerAddress !== walletAddress) return null;
+
+  return {
+    id: user.id,
+    walletAddress: user.walletAddress,
+  };
+}
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(db),
@@ -49,6 +82,15 @@ export const authOptions: AuthOptions = {
 
         return user;
       },
+    }),
+    CredentialsProvider({
+      id: "crypto",
+      name: "Crypto Wallet Auth",
+      credentials: {
+        walletAddress: { label: "Public Address", type: "text" },
+        signedNonce: { label: "Signed Nonce", type: "text" },
+      },
+      authorize: authorizeCrypto,
     }),
   ],
   callbacks: {

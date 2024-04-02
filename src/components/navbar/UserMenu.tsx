@@ -2,8 +2,11 @@
 import React from "react";
 import { AiOutlineMenu } from "react-icons/ai";
 import { useRouter } from "next/navigation";
-import { signOut } from "next-auth/react";
+import { signOut, signIn } from "next-auth/react";
+import { createUser } from "@/services/user";
 import { User } from "next-auth";
+import { ethers } from "ethers";
+import { db } from "@/lib/db";
 
 import Avatar from "../Avatar";
 import MenuItem from "./MenuItem";
@@ -18,6 +21,39 @@ interface UserMenuProps {
   user?: User & {
     id: string;
   };
+}
+
+declare global {
+  interface Window {
+    ethereum?: any;
+  }
+}
+
+async function onSignInWithCrypto() {
+  try {
+    if (!window.ethereum) {
+      window.alert("Please install MetaMask first.");
+      return;
+    }
+
+    // Get the wallet provider, the signer and address
+    //  see: https://docs.ethers.org/v6/getting-started/#starting-signing
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    const walletAddress = await signer.getAddress();
+
+    // Sign the received nonce
+    const signedNonce = await signer.signMessage("Welcome to sign in ComHouse!");
+
+    // Use NextAuth to sign in with our address and the nonce
+    await signIn("crypto", {
+      walletAddress,
+      signedNonce,
+      callbackUrl: "/",
+    });
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
@@ -75,23 +111,12 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
                 </>
               ) : (
                 <>
-                  <Modal.Trigger name="Login">
-                    <MenuItem label="Log in" />
-                  </Modal.Trigger>
-
-                  <Modal.Trigger name="Sign up">
-                    <MenuItem label="Sign up" />
-                  </Modal.Trigger>
+                 <MenuItem label="Log in" onClick={onSignInWithCrypto}/>
                 </>
               )}
             </Menu.List>
           </Menu>
-          <Modal.Window name="Login">
-            <AuthModal name="Login" />
-          </Modal.Window>
-          <Modal.Window name="Sign up">
-            <AuthModal name="Sign up" />
-          </Modal.Window>
+        
           <Modal.Window name="share">
             <RentModal />
           </Modal.Window>

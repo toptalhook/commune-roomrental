@@ -3,21 +3,24 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
-  url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_DATABASE_URL")
+
 }
 
 model User {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  id            String    @id @default(cuid())
+  walletAddress  String    @unique
   name          String?
   email         String?   @unique
   emailVerified DateTime?
   image         String?
   password      String?
-  favoriteIds   String[]  @db.ObjectId
+  favoriteIds   String[] 
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
 
   accounts     Account[]
   listings     Listing[]
@@ -25,17 +28,17 @@ model User {
 }
 
 model Account {
-  id                String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId            String  @db.ObjectId
+  id                String  @id @default(cuid())
+  userId            String  
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.String
-  access_token      String? @db.String
+  refresh_token     String? 
+  access_token      String? 
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.String
+  id_token          String? 
   session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -44,7 +47,7 @@ model Account {
 }
 
 model Listing {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  id            String  @id @default(cuid())
   title         String
   description   String
   imageSrc      String[]
@@ -53,7 +56,7 @@ model Listing {
   roomCount     Int
   bathroomCount Int
   guestCount    Int
-  userId        String   @db.ObjectId
+  userId        String   
   price         Int
   country       String?
   latlng        Int[]
@@ -65,9 +68,9 @@ model Listing {
 }
 
 model Reservation {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId     String   @db.ObjectId
-  listingId  String   @db.ObjectId
+  id         String  @id @default(cuid())
+  userId     String  
+  listingId  String   
   startDate  DateTime
   endDate    DateTime
   totalPrice Int

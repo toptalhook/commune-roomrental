@@ -178,21 +178,6 @@ const Search = () => {
 
       </button>
 
-
-      {/* <Modal open={countryModalShow} footer={null} closeIcon={null}>
-        <SearchCountryModal onCancel={handleModalCancel} onOK={handleModalOK} />
-      </Modal>
-
-      <Modal open={dateModalShow} footer={null} closeIcon={null}>
-        <SearchDate onCancel={handleModalCancel} onOK={handleDateModalOK} />
-      </Modal>
-
-      <Modal open={guestModalShow} footer={null} closeIcon={null}>
-        <SearchGuest onCancel={handleModalCancel} onOK={handleGuestModalOK}/>
-      </Modal> */}
-
-
-
     </>
 
   );
