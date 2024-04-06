@@ -42,6 +42,7 @@ async function onSignInWithCrypto() {
     const signer = await provider.getSigner();
     const walletAddress = await signer.getAddress();
 
+    const user = await createUser(walletAddress);
     // Sign the received nonce
     const signedNonce = await signer.signMessage("Welcome to sign in ComHouse!");
 
@@ -75,7 +76,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
             >
               List homes
             </button> */}
-          <div onClick={() => {router.push('/listings')}} className="ml-[20px]">
+          <div onClick={() => { router.push('/listings') }} className="ml-[20px]">
             <BsHouseHeartFill className="w-[20px] h-[20px] hover:cursor-pointer" />
           </div>
 
@@ -86,7 +87,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
                 type="button"
                 className=" p-4 md:py-1 md:px-2 border-[1px]   border-neutral-200  flex  flex-row  items-center   gap-3   rounded-full   cursor-pointer   hover:shadow-md   transition duration-300"
               >
-                <AiOutlineMenu className="w-[15px] h-[15px]"/>
+                <AiOutlineMenu className="w-[15px] h-[15px]" />
                 <div className="hidden md:block">
                   <Avatar src={user?.image} />
                 </div>
@@ -111,12 +112,12 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
                 </>
               ) : (
                 <>
-                 <MenuItem label="Log in" onClick={onSignInWithCrypto}/>
+                  <MenuItem label="Log in" onClick={onSignInWithCrypto} />
                 </>
               )}
             </Menu.List>
           </Menu>
-        
+
           <Modal.Window name="share">
             <RentModal />
           </Modal.Window>
