@@ -8,6 +8,8 @@ import ListingClient from "./_components/ListingClient";
 import { getCurrentUser } from "@/services/user";
 import { getListingById } from "@/services/listing";
 import { categories } from "@/utils/constants";
+import { Reviewdetails } from "@/components/Reviewdetails";
+
 
 interface IParams {
   listingId: string;
@@ -67,6 +69,8 @@ const ListingPage = async ({ params: { listingId } }: { params: IParams }) => {
           latlng={latlng}
         />
       </ListingClient>
+
+      <Reviewdetails />
     </section>
   );
 };
