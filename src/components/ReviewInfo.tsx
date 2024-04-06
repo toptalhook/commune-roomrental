@@ -6,18 +6,21 @@ import ReviewModal from "./ReviewModal";
 
 interface ReviewCardProps {
     name: string,
-    score: string,
     location: string,
     description: string,
 }
 
 interface ReviewInfoProps {
-    reviews: ReviewCardProps[]
+    reviews: ReviewCardProps[],
+    scores: Number[],
+    total: Number
 
 }
 
 const ReviewInfo: React.FC<ReviewInfoProps> = ({
     reviews,
+    scores,
+    total
 
 }) => {
 
@@ -34,8 +37,8 @@ const ReviewInfo: React.FC<ReviewInfoProps> = ({
                     reviews?.map((item, index) => {
                         return (
                             (index < 6) && <ReviewCard
+                                key={index}
                                 name={item.name}
-                                score={item.score}
                                 location={item.location}
                                 description={item.description} />
                         )
@@ -54,7 +57,7 @@ const ReviewInfo: React.FC<ReviewInfoProps> = ({
             {
                 isOpen
                 &&
-                <ReviewModal reviews={reviews} closeModal={closeModal} />
+                <ReviewModal reviews={reviews} closeModal={closeModal} scores={scores} total={total} />
             }
         </>
     );

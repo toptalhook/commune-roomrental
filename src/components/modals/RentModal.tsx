@@ -99,7 +99,6 @@ const RentModal = ({ onCloseModal }: { onCloseModal?: () => void }) => {
 
     startTransition(async () => {
       try {
-  
         const newListing = await createListing(data);
         toast.success(`${data.title} added successfully!`);
         queryClient.invalidateQueries({
@@ -174,8 +173,8 @@ const RentModal = ({ onCloseModal }: { onCloseModal?: () => void }) => {
               subtitle="Show guests what your place looks like!"
             />
             <ImageUpload
-                onChange={(value) => setCustomValue('image', value)}
-                value={image}
+              onChange={(value) => setCustomValue('image', value)}
+              value={image}
             />
           </div>
         );
@@ -242,13 +241,13 @@ const RentModal = ({ onCloseModal }: { onCloseModal?: () => void }) => {
             />
             <div className="flex-1 grid grid-cols-2  gap-3 max-h-[60vh] lg:max-h-[260px] overflow-y-scroll scroll-smooth">
               {categories.map((item) => (
-                  <CategoryButton
-                    onClick={setCustomValue}
-                    watch={watch}
-                    label={item.label}
-                    icon={item.icon}
-                    key={item.label}
-                  />
+                <CategoryButton
+                  onClick={setCustomValue}
+                  watch={watch}
+                  label={item.label}
+                  icon={item.icon}
+                  key={item.label}
+                />
               ))}
             </div>
           </div>

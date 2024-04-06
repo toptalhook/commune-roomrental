@@ -3,21 +3,20 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider  = "postgresql"
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_DATABASE_URL")
-
 }
 
 model User {
   id            String    @id @default(cuid())
-  walletAddress  String    @unique
+  walletAddress String    @unique
   name          String?
   email         String?   @unique
   emailVerified DateTime?
   image         String?
   password      String?
-  favoriteIds   String[] 
+  favoriteIds   String[]
 
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
@@ -25,20 +24,21 @@ model User {
   accounts     Account[]
   listings     Listing[]
   reservations Reservation[]
+  Review       Review[]
 }
 
 model Account {
   id                String  @id @default(cuid())
-  userId            String  
+  userId            String
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? 
-  access_token      String? 
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? 
+  id_token          String?
   session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -47,7 +47,7 @@ model Account {
 }
 
 model Listing {
-  id            String  @id @default(cuid())
+  id            String   @id @default(cuid())
   title         String
   description   String
   imageSrc      String[]
@@ -56,7 +56,7 @@ model Listing {
   roomCount     Int
   bathroomCount Int
   guestCount    Int
-  userId        String   
+  userId        String
   price         Int
   country       String?
   latlng        Int[]
@@ -65,12 +65,29 @@ model Listing {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   reservations Reservation[]
+  Review       Review[]
+}
+
+model Review {
+  id             String @id @default(cuid())
+  userId         String
+  listingId      String
+  cleanliness    Float
+  accuracy       Float
+  check_in       Float
+  communication  Float
+  location_score Float
+  value          Float
+  description    String
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
 }
 
 model Reservation {
-  id         String  @id @default(cuid())
-  userId     String  
-  listingId  String   
+  id         String   @id @default(cuid())
+  userId     String
+  listingId  String
   startDate  DateTime
   endDate    DateTime
   totalPrice Int

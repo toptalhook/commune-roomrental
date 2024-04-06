@@ -70,7 +70,7 @@ const ListingPage = async ({ params: { listingId } }: { params: IParams }) => {
         />
       </ListingClient>
 
-      <Reviewdetails />
+      <Reviewdetails listingId={listingId} />
     </section>
   );
 };

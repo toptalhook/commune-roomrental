@@ -15,14 +15,15 @@ import ReviewCard from "./ReviewCard";
 
 interface ReviewCardProps {
     name: string,
-    score: string,
     location: string,
     description: string,
 }
 
 interface ReviewInfoProps {
     reviews: ReviewCardProps[],
-    closeModal: () => void
+    closeModal: () => void,
+    scores: Number[],
+    total: Number
 }
 
 interface ReviewIconProps {
@@ -68,11 +69,12 @@ const SearchBox = () => {
 
 const ReviewModal: React.FC<ReviewInfoProps> = ({
     reviews,
-    closeModal
+    closeModal,
+    total,
+    scores
 }) => {
     return (
         <>
-
             <div className="fixed z-50 inset-0 bg-gray-900 bg-opacity-60 overflow-hidden h-full w-full px-4 ">
                 <div className="relative top-20 mx-auto shadow-xl rounded-md bg-white w-[50vw] h-[90vh]">
 
@@ -87,7 +89,6 @@ const ReviewModal: React.FC<ReviewInfoProps> = ({
                             </svg>
                         </button>
                     </div>
-
                     <div >
                         <div className="grid gap-0 grid-cols-8 ">
                             {/*  */}
@@ -96,7 +97,7 @@ const ReviewModal: React.FC<ReviewInfoProps> = ({
                                     {/* Logo */}
                                     <div className="flex items-center justify-center">
                                         <Image src={"https://a0.muscache.com/im/pictures/airbnb-platform-assets/AirbnbPlatformAssets-GuestFavorite/original/78b7687c-5acf-4ef8-a5ea-eda732ae3b2f.png"} alt={""} width={60} height={100} />
-                                        <h1 className=" text-6xl font-bold py-10 mb-5 font-Circular" >4.96</h1>
+                                        <h1 className=" text-6xl font-bold py-10 mb-5 font-Circular" >{total.toFixed(2)}</h1>
                                         <Image src={"   https://a0.muscache.com/im/pictures/airbnb-platform-assets/AirbnbPlatformAssets-GuestFavorite/original/b4005b30-79ff-4287-860c-67829ecd7412.png"} alt={""} width={60} height={100} />
                                     </div>
 
@@ -109,12 +110,36 @@ const ReviewModal: React.FC<ReviewInfoProps> = ({
                                     </div>
                                     <hr className="px-4 w-[70%] mx-auto mb-20" />
                                     <div className="pl-10 pr-5">
-                                        <ReviewIcon title="Cleanliness" score="5.0" icon={<TfiSpray size={30} />} />
-                                        <ReviewIcon title="Cleanliness" score="5.0" icon={<IoIosCheckmarkCircleOutline size={30} />} />
-                                        <ReviewIcon title="Cleanliness" score="5.0" icon={<GoKey size={30} />} />
-                                        <ReviewIcon title="Cleanliness" score="5.0" icon={<RiMessage2Line size={30} />} />
-                                        <ReviewIcon title="Cleanliness" score="5.0" icon={<GrMapLocation size={30} />} />
-                                        <ReviewIcon title="Cleanliness" score="5.0" icon={<FiTag size={30} />} />
+                                        <ReviewIcon
+                                            title="Cleanliness"
+                                            score={scores[0].toString()}
+                                            icon={<TfiSpray size={30} />}
+                                        />
+                                        <ReviewIcon
+                                            title="Accuracy"
+                                            score={scores[1].toString()}
+                                            icon={<IoIosCheckmarkCircleOutline size={30} />}
+                                        />
+                                        <ReviewIcon
+                                            title="Check-in"
+                                            score={scores[2].toString()}
+                                            icon={<GoKey size={30} />}
+                                        />
+                                        <ReviewIcon
+                                            title="Communication"
+                                            score={scores[3].toString()}
+                                            icon={<RiMessage2Line size={30} />}
+                                        />
+                                        <ReviewIcon
+                                            title="Location"
+                                            score={scores[4].toString()}
+                                            icon={<GrMapLocation size={30} />}
+                                        />
+                                        <ReviewIcon
+                                            title="Value"
+                                            score={scores[5].toString()}
+                                            icon={<FiTag size={30} />}
+                                        />
 
                                     </div>
                                 </div>
@@ -143,7 +168,6 @@ const ReviewModal: React.FC<ReviewInfoProps> = ({
                                                 return (
                                                     <ReviewCard
                                                         name={item.name}
-                                                        score={item.score}
                                                         location={item.location}
                                                         description={item.description} />
                                                 )

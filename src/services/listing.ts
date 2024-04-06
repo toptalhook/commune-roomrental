@@ -12,7 +12,7 @@ export const getListings = async (query?: {
       roomCount,
       guestCount,
       bathroomCount,
-      country, 
+      country,
       startDate,
       endDate,
       category,
@@ -116,6 +116,11 @@ export const getListingById = async (id: string) => {
         select: {
           startDate: true,
           endDate: true,
+        },
+      },
+      Review: {
+        select: {
+          listingId: true,
         },
       },
     },

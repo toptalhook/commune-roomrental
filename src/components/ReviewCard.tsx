@@ -1,14 +1,11 @@
 interface ReviewCardProps {
     name: string,
-
-    score: string,
     location: string,
     description: string,
 
 }
 const ReviewCard: React.FC<ReviewCardProps> = ({
     name,
-    score,
     location,
     description,
 }) => {
