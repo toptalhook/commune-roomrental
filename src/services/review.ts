@@ -29,27 +29,29 @@ export const createReview = async ({
     const listing = await getListingById(listingId);
     if (!listing) throw new Error("No listings!");
 
-    console.log(listing, '****************')
-    // if (!listing.Review.filter)
-    // const review = await db.review.upsert({
-    //     where: {
-    //         listingId: listingId,
-    //         userId: user.id,
-    //     },
-    //     create: {
-    //         cleanliness,
-    //         accuracy,
-    //         check_in,
-    //         communication,
-    //         location_score,
-    //         value,
-    //         description,
-    //         userId: user.id,
-    //         listingId: listing.id,
-    //     },
-    //     update: {}
-    // })
-    // return review;
-    return null
+    const review = await db.review.create({
+        data: {
+            cleanliness,
+            accuracy,
+            check_in,
+            communication,
+            location_score,
+            value,
+            description,
+            userId: user.id,
+            listingId: listing.id,
+        }
+    })
+    return review;
 };
 
+export const getReviews = async (listingId: string) => {
+    try {
+        const listing = await getListingById(listingId);
+        if (!listing?.Review) throw new Error("Error no data");
+
+        return listing.Review;
+    } catch (error) {
+        console.error("Failed to get Reviews data!, ", error);
+    }
+}

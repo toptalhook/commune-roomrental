@@ -16,7 +16,7 @@ interface HomeProps {
 const Home: FC<HomeProps> = async ({ searchParams }) => {
   const { listings, nextCursor } = await getListings(searchParams);
   const favorites = await getFavorites();
-
+  console.log(favorites)
   if (!listings || listings.length === 0) {
     return (
       <EmptyState

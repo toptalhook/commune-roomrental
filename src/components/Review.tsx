@@ -66,8 +66,6 @@ const Review: React.FC<ReviewProps> = ({
             listingId: listingId
         }
         const review = await createReview(data);
-
-        console.log(review)
     }
     return (
         <div className="fixed z-50 inset-0 bg-gray-900 bg-opacity-60 overflow-hidden h-full w-full px-4 ">

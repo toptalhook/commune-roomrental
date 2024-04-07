@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from "next/image";
 
 
@@ -11,12 +11,11 @@ import { RiMessage2Line } from "react-icons/ri";
 import { FiTag } from "react-icons/fi";
 import { GrMapLocation } from "react-icons/gr";
 
+import { getReviews } from '@/services/review';
+
 import ReviewItem from './ReviewItem'
 import ReviewInfo from './ReviewInfo';
 import Review from './Review';
-
-
-import reviews from '@/data/reviews.json';
 
 export const Reviewdetails = ({
     listingId
@@ -25,6 +24,7 @@ export const Reviewdetails = ({
 }) => {
 
     const [isOpen, setIsOpen] = useState(false);
+    const [reviews, setReviews] = useState<any>([]);
 
     const [scores, setScores] = useState([0.0, 0.0, 0.0, 0.0, 0.0, 0.0]);
     const [total, setTotal] = useState(0.0);
@@ -34,7 +34,7 @@ export const Reviewdetails = ({
     }
     const calculateScore = () => {
         let totalscore = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
-        reviews.forEach((item) => {
+        reviews.forEach((item: { cleanliness: any; accuracy: any; check_in: any; communication: any; location_score: any; value: any; }) => {
             totalscore[0] += Number(item.cleanliness);
             totalscore[1] += Number(item.accuracy);
             totalscore[2] += Number(item.check_in);
@@ -51,6 +51,21 @@ export const Reviewdetails = ({
         setScores(totalscore);
         setTotal(totalscore.reduce((sum, item) => sum + item, 0) / 6)
     }
+
+    useEffect(() => {
+        getReviews(listingId)
+            .then((data) => {
+                if (!data) throw new Error("No data");
+                setReviews(data)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+            .finally(() => {
+
+            })
+    }, [])
+
     useEffect(() => {
         calculateScore()
     }, [reviews])

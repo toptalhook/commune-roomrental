@@ -120,7 +120,13 @@ export const getListingById = async (id: string) => {
       },
       Review: {
         select: {
-          listingId: true,
+          cleanliness: true,
+          accuracy: true,
+          check_in: true,
+          communication: true,
+          location_score: true,
+          value: true,
+          description: true,
         },
       },
     },
