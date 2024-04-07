@@ -31,7 +31,6 @@ const Review: React.FC<ReviewProps> = ({
     const [value, setValue] = useState(3);
 
     const setRating = (value: number, key: string) => {
-        console.log(value)
         switch (key) {
             case "cleanliness":
                 setCleanliness(value);
@@ -66,6 +65,7 @@ const Review: React.FC<ReviewProps> = ({
             listingId: listingId
         }
         const review = await createReview(data);
+        closeModal()
     }
     return (
         <div className="fixed z-50 inset-0 bg-gray-900 bg-opacity-60 overflow-hidden h-full w-full px-4 ">
@@ -154,7 +154,6 @@ const Review: React.FC<ReviewProps> = ({
                     <div className="col-span-5 pr-10">
                         <div className="flex items-center">
                             <TextArea
-                                maxLength={100}
                                 ref={description}
                                 placeholder="write your review kindly"
                                 style={{ height: 300, fontSize: 30 }}
