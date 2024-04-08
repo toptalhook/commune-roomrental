@@ -25,7 +25,7 @@ const ListingHead: React.FC<ListingHeadProps> = async ({
     <>
       <Heading title={title} subtitle={`${region}, ${country}`} backBtn />
       <div
-        className={`w-full  bg-gray-100 h-[260px] overflow-hidden  rounded-xl relative transition duration-300 flex gap-x-[10px]`}
+        className={`w-full  bg-gray-100  overflow-hidden  rounded-xl relative transition duration-300 flex gap-x-[10px] h-[70%]`}
       >
         <div className="w-[50%]">
 
