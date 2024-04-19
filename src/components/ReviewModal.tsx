@@ -167,6 +167,7 @@ const ReviewModal: React.FC<ReviewInfoProps> = ({
                                             reviews?.map((item, index) => {
                                                 return (
                                                     <ReviewCard
+                                                        key={index}
                                                         name={item.name}
                                                         location={item.location}
                                                         description={item.description} />

@@ -60,12 +60,13 @@ const AuthModal = ({
   };
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    const { email, password, name } = data;
+    const { walletAddress, email, password, name } = data;
 
     startTransition(async () => {
       try {
         if (isLoginModal) {
           const callback = await signIn("credentials", {
+            walletAddress,
             email,
             password,
             redirect: false,
@@ -80,7 +81,7 @@ const AuthModal = ({
             router.refresh();
           }
         } else {
-          await registerUser({ email, password, name });
+          await registerUser({ walletAddress, email, password, name });
           setTitle("Login");
           toast.success("You've successfully registered.");
           reset();
