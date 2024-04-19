@@ -30,7 +30,7 @@ const Home: FC<HomeProps> = async ({ searchParams }) => {
           <div className="w-[50%] text-white font-bold text-[33px] pb-[10px]">
             The world's largest selection of room rentals
           </div>
-  
+
         </div>
 
       </div>
