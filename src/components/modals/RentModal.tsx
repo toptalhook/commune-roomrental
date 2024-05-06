@@ -20,6 +20,8 @@ import ImageUpload from "../ImageUpload";
 import { categories } from "@/utils/constants";
 import { createListing } from "@/services/listing";
 
+import { createAppartment, loadAppartments } from "@/Blockchain.services";
+
 const steps = {
   "0": "category",
   "1": "location",
@@ -67,7 +69,7 @@ const RentModal = ({ onCloseModal }: { onCloseModal?: () => void }) => {
 
   const location = watch("location");
   const country = location?.label;
-  const image = watch('image');
+  const image = watch("image");
 
   const Map = useMemo(
     () =>
@@ -97,23 +99,46 @@ const RentModal = ({ onCloseModal }: { onCloseModal?: () => void }) => {
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     if (step !== STEPS.PRICE) return onNext();
 
+    const {
+      category,
+      location: { region, label: country, latlng },
+      guestCount,
+      bathroomCount,
+      roomCount,
+      image: imageSrc,
+      price,
+      title,
+      description,
+    } = data;
+
+    const templocation = [region, country, latlng];
+
+    const params = {
+      title,
+      description,
+      images: imageSrc.slice(0, imageSrc.length).join(","),
+      category,
+      location: templocation.slice(0, 3).join(","),
+      bathrooms: bathroomCount,
+      guests: guestCount,
+      rooms: roomCount,
+      price,
+    };
     startTransition(async () => {
       try {
-        console.log(data);
-        const newListing = await createListing(data);
-        toast.success(`${data.title} added successfully!`);
-        // queryClient.invalidateQueries({
-        //   queryKey: ["listings"],
-        // });
-        reset();
-        setStep(STEPS.CATEGORY);
-        onCloseModal?.();
-        router.refresh();
-        // router.push(`/listings/${newListing.id}`);
-        router.push('/listings');
+        console.log(params);
+        await createAppartment(params).then(async () => {
+          loadAppartments();
+          toast.success(`${data.title} added successfully!`);
+          reset();
+          setStep(STEPS.CATEGORY);
+          onCloseModal?.();
+          router.refresh();
+          router.push("/listings");
+        });
       } catch (error: any) {
         toast.error("Failed to create listing!");
-        console.log(error?.message)
+        console.log(error?.message);
       }
     });
   };
@@ -175,7 +200,7 @@ const RentModal = ({ onCloseModal }: { onCloseModal?: () => void }) => {
               subtitle="Show guests what your place looks like!"
             />
             <ImageUpload
-              onChange={(value) => setCustomValue('image', value)}
+              onChange={(value) => setCustomValue("image", value)}
               value={image}
             />
           </div>

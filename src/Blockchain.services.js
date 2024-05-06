@@ -4,7 +4,7 @@ import { getGlobalState, setGlobalState } from './store'
 import { ethers } from 'ethers'
 // import { logOutWithCometChat } from './services/Chat'
 
-const { ethereum } = window
+const { ethereum } = window;
 const contractAddress = address.address
 const contractAbi = abi.abi
 let tx
@@ -306,7 +306,7 @@ const structureAppartments = (appartments) =>
     deleted: appartment.deleted,
     images: appartment.images.split(','),
     category: appartment.category,
-    location: appartment.location,
+    location: appartment.location.split(','),
     bathrooms: Number(appartment.bathrooms),
     guests: Number(appartment.guests),
     rooms: Number(appartment.rooms),

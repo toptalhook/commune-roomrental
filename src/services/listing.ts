@@ -3,6 +3,8 @@ import { db } from "@/lib/db";
 import { LISTINGS_BATCH } from "@/utils/constants";
 import { getCurrentUser } from "./user";
 
+import { createAppartment, loadAppartments } from "@/Blockchain.services";
+
 export const getListings = async (query?: {
   [key: string]: string | string[] | undefined | null;
 }) => {
@@ -167,7 +169,8 @@ export const createListing = async (data: { [x: string]: any }) => {
     rooms: roomCount,
     price,
   };
-  console.log(params);
+  console.log(params, "---------------");
+
   // const user = await getCurrentUser();
   // if (!user) throw new Error("Unauthorized!");
 
