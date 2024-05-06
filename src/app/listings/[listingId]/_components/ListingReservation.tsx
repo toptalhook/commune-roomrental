@@ -13,12 +13,12 @@ interface ListingReservationProps {
   onChangeDate: (name: string, value: Range) => void;
   onSubmit: () => void;
   isLoading?: boolean;
-  disabledDates: Date[];
+  // disabledDates: Date[];
 }
 
 const Calendar = dynamic(() => import("@/components/Calender"), {
-  ssr: false
-})
+  ssr: false,
+});
 
 const ListingReservation: React.FC<ListingReservationProps> = ({
   price,
@@ -26,19 +26,19 @@ const ListingReservation: React.FC<ListingReservationProps> = ({
   totalPrice,
   onChangeDate,
   onSubmit,
-  disabledDates,
+  // disabledDates,
   isLoading,
 }) => {
   return (
     <div className="bg-white rounded-xl border-[1px] border-neutral-200 overflow-hidden">
       <div className="flex flex-row items-center gap-1 p-4">
-        <span className="text-lg font-semibold">$ {formatPrice(price)}</span>
+        <span className="text-lg font-semibold">ETH {formatPrice(price)}</span>
         <span className="font-light text-neutral-600">night</span>
       </div>
       <hr />
       <Calendar
         value={dateRange}
-        disabledDates={disabledDates}
+        // disabledDates={disabledDates}
         onChange={onChangeDate}
       />
       <hr />

@@ -1,8 +1,8 @@
-"use client"
+"use client";
 import React from "react";
 import Link from "next/link";
 import { format } from "date-fns";
-import { Listing } from "@prisma/client";
+// import { Listing } from "@prisma/client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Skeleton from "react-loading-skeleton";
@@ -16,7 +16,19 @@ import { GrFormPrevious } from "react-icons/gr";
 import { SlLocationPin } from "react-icons/sl";
 
 interface ListingCardProps {
-  data: Listing;
+  data: {
+    id: string;
+    title: string;
+    description: string;
+    category: string;
+    images: string[];
+    location: string[];
+    bathrooms: number;
+    rooms: number;
+    guests: number;
+    owner: string;
+    price: number;
+  };
   reservation?: {
     id: string;
     startDate: Date;
@@ -37,8 +49,8 @@ const ListingCard: React.FC<ListingCardProps> = ({
   const [showbutton, setShowButton] = useState(false);
 
   const handleClick = () => {
-    router.push(`/listings/${data.id}`)
-  }
+    router.push(`/listings/${data.id}`);
+  };
 
   let reservationDate;
   if (reservation) {
@@ -63,42 +75,55 @@ const ListingCard: React.FC<ListingCardProps> = ({
         </div>
       </div>
 
-      <div className="flex flex-col gap-1 w-full" >
-        <div className=" overflow-hidden md:rounded-t-lg rounded-t-md" onMouseEnter={() => { setShowButton(true) }} onMouseLeave={() => {
-          setShowButton(false)
-        }}>
+      <div className="flex flex-col gap-1 w-full">
+        <div
+          className=" overflow-hidden md:rounded-t-lg rounded-t-md"
+          onMouseEnter={() => {
+            setShowButton(true);
+          }}
+          onMouseLeave={() => {
+            setShowButton(false);
+          }}
+        >
           <div className="aspect-[1/0.95] relative bg-gray-100">
             <div onClick={handleClick}>
               <Image
-                imageSrc={data.imageSrc[displayIndex]}
+                imageSrc={data.images[displayIndex]}
                 fill
                 alt={data.title}
                 effect="zoom"
               />
-
             </div>
-            {
-              showbutton &&
+            {showbutton && (
               <div className="relative transform top-1/2 -translate-y-1/2 px-[15px]">
                 {displayIndex > 0 && (
-                  <div className="bg-slate-50 rounded-full w-[25px] h-[25px] flex items-center justify-center hover:scale-110 transition-all absolute left-[10px]" onClick={() => { setDisplayIndex(displayIndex - 1) }}>
+                  <div
+                    className="bg-slate-50 rounded-full w-[25px] h-[25px] flex items-center justify-center hover:scale-110 transition-all absolute left-[10px]"
+                    onClick={() => {
+                      setDisplayIndex(displayIndex - 1);
+                    }}
+                  >
                     <GrFormPrevious className="text-gray-900 w-[15px] h-[15px]" />
                   </div>
                 )}
-                {displayIndex < data.imageSrc.length - 1 && (
-                  <div className="bg-slate-50 rounded-full w-[25px] h-[25px] flex items-center justify-center hover:scale-110 transition-all absolute right-[10px]" onClick={() => { setDisplayIndex(displayIndex + 1) }}>
+                {displayIndex < data.images.length - 1 && (
+                  <div
+                    className="bg-slate-50 rounded-full w-[25px] h-[25px] flex items-center justify-center hover:scale-110 transition-all absolute right-[10px]"
+                    onClick={() => {
+                      setDisplayIndex(displayIndex + 1);
+                    }}
+                  >
                     <GrFormNext className="text-gray-900 w-[15px] h-[15px]" />
                   </div>
                 )}
               </div>
-            }
-
+            )}
           </div>
         </div>
         <div className="p-[5px]">
           <span className="font-semibold text-[16px] mt-[4px] flex gap-x-[10px]  items-center">
             <SlLocationPin />
-            {data?.region}, {data?.country}
+            {data?.location[0]}, {data?.location[1]}
           </span>
           <span className="font-light text-neutral-500 text-sm">
             {reservationDate || data.category}
@@ -106,7 +131,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
 
           <div className="flex flex-row items-baseline gap-1">
             <span className="font-bold text-[#444] text-[14px]">
-              $ {formatPrice(price)}
+              ETH {formatPrice(price)}
             </span>
             {!reservation && <span className="font-light">night</span>}
           </div>

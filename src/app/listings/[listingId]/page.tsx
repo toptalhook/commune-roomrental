@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
 
 import EmptyState from "@/components/EmptyState";
 import ListingHead from "./_components/ListingHead";
@@ -10,44 +12,55 @@ import { getListingById } from "@/services/listing";
 import { categories } from "@/utils/constants";
 import { Reviewdetails } from "@/components/Reviewdetails";
 
+import { useGlobalState } from "@/store";
+import { loadAppartment } from "@/Blockchain.services";
 
 interface IParams {
   listingId: string;
 }
 
-const ListingPage = async ({ params: { listingId } }: { params: IParams }) => {
-  const listing = await getListingById(listingId);
-  const currentUser = await getCurrentUser();
+const ListingPage = ({ params: { listingId } }: { params: IParams }) => {
+  // const listing = await getListingById(listingId);
+  const [appartment] = useGlobalState("appartment");
+  const [currentUser, setCurrentUser] = useState<any>(null);
 
+  useEffect(() => {
+    const init = async () => {
+      await loadAppartment(listingId);
+      const user = await getCurrentUser();
+      setCurrentUser(user);
+    };
+    init();
+  }, []);
 
-  if (!listing) return <EmptyState />;
+  if (!appartment) return <EmptyState />;
 
   const {
     title,
-    imageSrc,
-    country,
-    region,
+    images: imageSrc,
+    location,
+    category,
     id,
     user: owner,
     price,
     description,
-    roomCount,
-    guestCount,
-    bathroomCount,
-    latlng,
-    reservations,
-  } = listing;
+    romms: roomCount,
+    guests: guestCount,
+    bathrooms: bathroomCount,
+  } = appartment;
 
-  const category = categories.find((cate) => cate.label === listing.category);
+  const tempcategory = categories.find((cate) => cate.label === category);
 
+  const latlng = [location[2], location[3]];
+  console.log(latlng);
   return (
     <section className="main-container">
       <div className="flex flex-col gap-6">
         <ListingHead
           title={title}
           image={imageSrc}
-          country={country}
-          region={region}
+          country={location[1]}
+          region={location[0]}
           id={id}
         />
       </div>
@@ -55,13 +68,13 @@ const ListingPage = async ({ params: { listingId } }: { params: IParams }) => {
       <ListingClient
         id={id}
         price={price}
-        reservations={reservations}
+        // reservations={reservations}
         user={currentUser}
         title={title}
       >
         <ListingInfo
           user={owner}
-          category={category}
+          category={tempcategory}
           description={description}
           roomCount={roomCount}
           guestCount={guestCount}
