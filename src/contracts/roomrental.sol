@@ -21,13 +21,13 @@ contract Roomrental is Ownable, ReentrancyGuard {
         uint rooms;
         uint price;
         address owner;
-        bool booked;
+        bool reservateed;
         bool deleted;
         bool availablity;
         uint timestamp;
     }
 
-     struct BookingStruct {
+    struct ReservationStruct {
         uint id;
         address tenant;
         uint date;
@@ -50,10 +50,10 @@ contract Roomrental is Ownable, ReentrancyGuard {
     uint public taxPercent;
 
     mapping(uint => ApartmentStruct) apartments;
-    mapping(uint => BookingStruct[]) bookingsOf;
+    mapping(uint => ReservationStruct[]) reservationsOf;
     mapping(uint => ReviewStruct[]) reviewsOf;
     mapping(uint => bool) appartmentExist;
-    mapping(uint => uint[]) bookedDates;
+    mapping(uint => uint[]) reservatedDates;
     mapping(uint => mapping(uint => bool)) isDateBooked;
     mapping(address => mapping(uint => bool)) hasBooked;
 
@@ -174,39 +174,39 @@ contract Roomrental is Ownable, ReentrancyGuard {
         return apartments[id];
     }
 
-    function bookApartment(uint id, uint[] memory dates) public payable {    
+    function reservateApartment(uint id, uint[] memory dates) public payable {    
         require(appartmentExist[id], "Apartment not found!");
         require(msg.value >= apartments[id].price * dates.length + securityFee, "Insufficient fund!");
         require(datesAreCleared(id, dates), "Booked date found among dates!");
 
         for (uint i = 0; i < dates.length; i++) {
-            BookingStruct memory booking;
-            booking.id = bookingsOf[id].length;
-            booking.tenant = msg.sender;
-            booking.date = dates[i];
-            booking.price = apartments[id].price;
-            bookingsOf[id].push(booking);            
+            ReservationStruct memory reservation;
+            reservation.id = reservationsOf[id].length;
+            reservation.tenant = msg.sender;
+            reservation.date = dates[i];
+            reservation.price = apartments[id].price;
+            reservationsOf[id].push(reservation);            
             isDateBooked[id][dates[i]] = true;
-            bookedDates[id].push(dates[i]);
+            reservatedDates[id].push(dates[i]);
         }
     }
 
     function datesAreCleared(uint id, uint[] memory dates) internal view returns (bool) {
         bool lastCheck = true;
         for(uint i=0; i < dates.length; i++) {
-            for(uint j=0; j < bookedDates[id].length; j++) {
-                if(dates[i] == bookedDates[id][j]) lastCheck = false;
+            for(uint j=0; j < reservatedDates[id].length; j++) {
+                if(dates[i] == reservatedDates[id][j]) lastCheck = false;
             }
         }
         return lastCheck;
     }
 
-    function checkInApartment(uint id, uint bookingId) public {    
-       require(msg.sender == bookingsOf[id][bookingId].tenant, "Unauthorized tenant!");
-       require(!bookingsOf[id][bookingId].checked, "Apartment already checked on this date!");
+    function checkInApartment(uint id, uint reservationId) public {    
+       require(msg.sender == reservationsOf[id][reservationId].tenant, "Unauthorized tenant!");
+       require(!reservationsOf[id][reservationId].checked, "Apartment already checked on this date!");
        
-       bookingsOf[id][bookingId].checked = true;
-       uint price = bookingsOf[id][bookingId].price;
+       reservationsOf[id][reservationId].checked = true;
+       uint price = reservationsOf[id][reservationId].price;
        uint fee = (price * taxPercent) / 100;
 
        hasBooked[msg.sender][id] = true;
@@ -216,11 +216,11 @@ contract Roomrental is Ownable, ReentrancyGuard {
        payTo(msg.sender, securityFee);
     }
 
-    function claimFunds(uint id, uint bookingId) public {
+    function claimFunds(uint id, uint reservationId) public {
         require(msg.sender == apartments[id].owner, "Unauthorized entity");
-        require(!bookingsOf[id][bookingId].checked, "Apartment already checked on this date!");
+        require(!reservationsOf[id][reservationId].checked, "Apartment already checked on this date!");
 
-        uint price = bookingsOf[id][bookingId].price;
+        uint price = reservationsOf[id][reservationId].price;
         uint fee = (price * taxPercent) / 100;
     
        payTo(apartments[id].owner, (price - fee));
@@ -228,24 +228,24 @@ contract Roomrental is Ownable, ReentrancyGuard {
        payTo(msg.sender, securityFee);
     }
 
-    function refundBooking(uint id, uint bookingId, uint date) public nonReentrant {
-       require(!bookingsOf[id][bookingId].checked, "Apartment already checked on this date!");
+    function refundReservation(uint id, uint reservationId, uint date) public nonReentrant {
+       require(!reservationsOf[id][reservationId].checked, "Apartment already checked on this date!");
 
         if(msg.sender != owner()) {
-            require(msg.sender == bookingsOf[id][bookingId].tenant, "Unauthorized tenant!");
-            require(bookingsOf[id][bookingId].date > currentTime(), "Can no longer refund, booking date started");
+            require(msg.sender == reservationsOf[id][reservationId].tenant, "Unauthorized tenant!");
+            require(reservationsOf[id][reservationId].date > currentTime(), "Can no longer refund, reservation date started");
         }
 
-        bookingsOf[id][bookingId].cancelled = true;
+        reservationsOf[id][reservationId].cancelled = true;
         isDateBooked[id][date] = false;
 
-        uint lastIndex = bookedDates[id].length - 1;
-        uint lastBookingId = bookedDates[id][lastIndex];
-        bookedDates[id][bookingId] = lastBookingId;
-        bookedDates[id].pop();
+        uint lastIndex = reservatedDates[id].length - 1;
+        uint lastReservationId = reservatedDates[id][lastIndex];
+        reservatedDates[id][reservationId] = lastReservationId;
+        reservatedDates[id].pop();
 
 
-        uint price = bookingsOf[id][bookingId].price;
+        uint price = reservationsOf[id][reservationId].price;
         uint fee = securityFee * taxPercent / 100;
 
         payTo(apartments[id].owner, (securityFee - fee));
@@ -254,20 +254,20 @@ contract Roomrental is Ownable, ReentrancyGuard {
    }
 
 
-    function hasBookedDateReached(uint id,uint bookingId) public view returns(bool) {
-        return bookingsOf[id][bookingId].date < currentTime();
+    function hasBookedDateReached(uint id,uint reservationId) public view returns(bool) {
+        return reservationsOf[id][reservationId].date < currentTime();
     }
 
     function getUnavailableDates(uint id) public view returns (uint[] memory) {
-        return bookedDates[id];
+        return reservatedDates[id];
     }
 
-   function getBookings(uint id) public view returns (BookingStruct[] memory) {
-        return bookingsOf[id];
+   function getReservations(uint id) public view returns (ReservationStruct[] memory) {
+        return reservationsOf[id];
    }
    
-   function getBooking(uint id, uint bookingId) public view returns (BookingStruct memory) {
-        return bookingsOf[id][bookingId];
+   function getReservation(uint id, uint reservationId) public view returns (ReservationStruct memory) {
+        return reservationsOf[id][reservationId];
    }
 
     function updateSecurityFee(uint newFee) public onlyOwner {

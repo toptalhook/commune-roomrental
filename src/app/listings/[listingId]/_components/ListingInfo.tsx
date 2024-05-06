@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useMemo } from "react";
 import dynamic from "next/dynamic";
 
 import Avatar from "@/components/Avatar";
@@ -18,10 +20,6 @@ interface ListingInfoProps {
   latlng: number[];
 }
 
-const Map = dynamic(() => import("@/components/Map"), {
-  ssr: false,
-});
-
 const ListingInfo: React.FC<ListingInfoProps> = ({
   user,
   description,
@@ -31,6 +29,15 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
   category,
   latlng,
 }) => {
+  const Map = useMemo(
+    () =>
+      dynamic(() => import("@/components/Map"), {
+        ssr: false,
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [latlng]
+  );
+
   return (
     <div className="col-span-4 flex flex-col gap-8">
       <div className="flex flex-col gap-2">

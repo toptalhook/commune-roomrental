@@ -4,10 +4,12 @@ import { getGlobalState, setGlobalState } from './store'
 import { ethers } from 'ethers'
 // import { logOutWithCometChat } from './services/Chat'
 
-const { ethereum } = window;
+// const { ethereum } = window;
 const contractAddress = address.address
 const contractAbi = abi.abi
-let tx
+let ethereum, tx
+
+if (typeof window !== 'undefined') ethereum = window.ethereum
 
 const toWei = (num) => ethers.utils.parseEther(num.toString())
 const fromWei = (num) => ethers.utils.formatEther(num)
@@ -40,7 +42,7 @@ const isWallectConnected = async () => {
       setGlobalState('connectedAccount', '')
     }
   } catch (error) {
-    reportError(error)
+    console.log(error)
   }
 }
 
@@ -50,7 +52,7 @@ const connectWallet = async () => {
     const accounts = await ethereum.request({ method: 'eth_requestAccounts' })
     setGlobalState('connectedAccount', accounts[0])
   } catch (error) {
-    reportError(error)
+    console.log(error)
   }
 }
 
@@ -135,7 +137,7 @@ const deleteAppartment = async (id) => {
     await tx.wait()
     await loadAppartments()
   } catch (err) {
-    reportError(err)
+    console.log(err)
   }
 }
 
@@ -146,8 +148,12 @@ const loadAppartments = async () => {
     const securityFee = await contract.securityFee()
     setGlobalState('appartments', structureAppartments(appartments))
     setGlobalState('securityFee', fromWei(securityFee))
+    console.log(structureAppartments(appartments));
+    // return (structureAppartments(appartments));
+    return 1;
+
   } catch (err) {
-    reportError(err)
+    console.log(err)
   }
 }
 
@@ -155,21 +161,21 @@ const loadAppartment = async (id) => {
   try {
     const contract = await getEtheriumContract()
     const appartment = await contract.getApartment(id)
-    const booked = await contract.tenantBooked(id)
+    const reservated = await contract.tenantBooked(id)
     setGlobalState('appartment', structureAppartments([appartment])[0])
-    setGlobalState('booked', booked)
+    setGlobalState('reservated', reservated)
   } catch (error) {
-    reportError(error)
+    console.log(error)
   }
 }
 
-const appartmentBooking = async ({ id, datesArray, amount }) => {
+const appartmentReservation = async ({ id, datesArray, amount }) => {
   try {
     const contract = await getEtheriumContract()
     const connectedAccount = getGlobalState('connectedAccount')
     const securityFee = getGlobalState('securityFee')
 
-    tx = await contract.bookApartment(id, datesArray, {
+    tx = await contract.reservateApartment(id, datesArray, {
       from: connectedAccount,
       value: toWei(Number(amount) + Number(securityFee)),
     })
@@ -180,47 +186,47 @@ const appartmentBooking = async ({ id, datesArray, amount }) => {
   }
 }
 
-const refund = async ({ id, bookingId, date }) => {
+const refund = async ({ id, reservationId, date }) => {
   try {
     const connectedAccount = getGlobalState('connectedAccount')
     const contract = await getEtheriumContract()
 
-    tx = await contract.refundBooking(id, bookingId, date, {
+    tx = await contract.refundReservation(id, reservationId, date, {
       from: connectedAccount,
     })
 
     await tx.wait()
     await getUnavailableDates(id)
   } catch (err) {
-    reportError(err)
+    console.log(err)
   }
 }
 
-const claimFunds = async ({ id, bookingId }) => {
+const claimFunds = async ({ id, reservationId }) => {
   try {
     const connectedAccount = getGlobalState('connectedAccount')
     const contract = await getEtheriumContract()
 
-    tx = await contract.claimFunds(id, bookingId, {
+    tx = await contract.claimFunds(id, reservationId, {
       from: connectedAccount,
     })
 
     await tx.wait()
   } catch (err) {
-    reportError
+    console.log
   }
 }
 
-const checkInApartment = async (id, bookingId) => {
+const checkInApartment = async (id, reservationId) => {
   try {
     const connectedAccount = getGlobalState('connectedAccount')
     const contract = await getEtheriumContract()
-    tx = await contract.checkInApartment(id, bookingId, {
+    tx = await contract.checkInApartment(id, reservationId, {
       from: connectedAccount,
     })
     await tx.wait()
   } catch (err) {
-    reportError(err)
+    console.log(err)
   }
 }
 
@@ -232,44 +238,44 @@ const getUnavailableDates = async (id) => {
   setGlobalState('timestamps', timestamps)
 }
 
-const hasBookedDateReached = async ({ id, bookingId }) => {
+const hasBookedDateReached = async ({ id, reservationId }) => {
   try {
     const connectedAccount = getGlobalState('connectedAccount')
     const contract = await getEtheriumContract()
-    const result = await contract.hasBookedDateReached(id, bookingId, {
+    const result = await contract.hasBookedDateReached(id, reservationId, {
       from: connectedAccount,
     })
     setGlobalState('status', result)
   } catch (err) {
-    reportError(err)
+    console.log(err)
   }
 }
 
-const getBookings = async (id) => {
+const getReservations = async (id) => {
   try {
     const connectedAccount = getGlobalState('connectedAccount')
     const contract = await getEtheriumContract()
-    const bookings = await contract.getBookings(id, {
+    const reservations = await contract.getReservations(id, {
       from: connectedAccount,
     })
 
-    setGlobalState('bookings', structuredBookings(bookings))
+    setGlobalState('reservations', structuredReservations(reservations))
   } catch (err) {
-    reportError(err)
+    console.log(err)
   }
 }
 
-const getBooking = async ({ id, bookingId }) => {
+const getReservation = async ({ id, reservationId }) => {
   try {
     const connectedAccount = getGlobalState('connectedAccount')
     const contract = await getEtheriumContract()
 
-    const booking = await contract.getBooking(id, bookingId, {
+    const reservation = await contract.getReservation(id, reservationId, {
       from: connectedAccount,
     })
-    setGlobalState('bookings', structuredBookings([booking])[0])
+    setGlobalState('reservations', structuredReservations([reservation])[0])
   } catch (err) {
-    reportError(err)
+    console.log(err)
   }
 }
 
@@ -282,7 +288,7 @@ const addReview = async (id, reviewText) => {
 
     await loadReviews(id)
   } catch (err) {
-    reportError(err)
+    console.log(err)
   }
 }
 
@@ -311,7 +317,7 @@ const structureAppartments = (appartments) =>
     guests: Number(appartment.guests),
     rooms: Number(appartment.rooms),
     timestamp: new Date(appartment.timestamp * 1000).toDateString(),
-    booked: appartment.booked,
+    reservated: appartment.reservated,
   }))
 
 const structuredReviews = (reviews) =>
@@ -323,14 +329,14 @@ const structuredReviews = (reviews) =>
     timestamp: new Date(review.timestamp * 1000).toDateString(),
   }))
 
-const structuredBookings = (bookings) =>
-  bookings.map((booking) => ({
-    id: booking.id.toNumber(),
-    tenant: booking.tenant.toLowerCase(),
-    date: new Date(booking.date.toNumber()).toDateString(),
-    price: parseInt(booking.price._hex) / 10 ** 18,
-    checked: booking.checked,
-    cancelled: booking.cancelled,
+const structuredReservations = (reservations) =>
+  reservations.map((reservation) => ({
+    id: reservation.id.toNumber(),
+    tenant: reservation.tenant.toLowerCase(),
+    date: new Date(reservation.date.toNumber()).toDateString(),
+    price: parseInt(reservation.price._hex) / 10 ** 18,
+    checked: reservation.checked,
+    cancelled: reservation.cancelled,
   }))
 
 export {
@@ -341,12 +347,12 @@ export {
   loadAppartment,
   updateApartment,
   deleteAppartment,
-  appartmentBooking,
+  appartmentReservation,
   loadReviews,
   addReview,
   getUnavailableDates,
-  getBookings,
-  getBooking,
+  getReservations,
+  getReservation,
   hasBookedDateReached,
   refund,
   checkInApartment,

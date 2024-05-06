@@ -15,6 +15,8 @@ import { Reviewdetails } from "@/components/Reviewdetails";
 import { useGlobalState } from "@/store";
 import { loadAppartment } from "@/Blockchain.services";
 
+import { useRouter } from "next/navigation";
+
 interface IParams {
   listingId: string;
 }
@@ -52,7 +54,7 @@ const ListingPage = ({ params: { listingId } }: { params: IParams }) => {
   const tempcategory = categories.find((cate) => cate.label === category);
 
   const latlng = [location[2], location[3]];
-  console.log(latlng);
+
   return (
     <section className="main-container">
       <div className="flex flex-col gap-6">
@@ -83,7 +85,7 @@ const ListingPage = ({ params: { listingId } }: { params: IParams }) => {
         />
       </ListingClient>
 
-      <Reviewdetails listingId={listingId} />
+      <Reviewdetails apartmentId={listingId} />
     </section>
   );
 };

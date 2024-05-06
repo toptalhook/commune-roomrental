@@ -1,3 +1,5 @@
+const countries = require('../src/data/countries.json');
+
 const { ethers } = require('hardhat')
 const { faker } = require('@faker-js/faker')
 const fs = require('fs')
@@ -56,7 +58,7 @@ async function main() {
     const title = faker.company.catchPhrase()
     const description = faker.lorem.paragraph()
     const category = shuffleArray(categorys)[0]
-    const location = faker.address.country()
+    const location = [shuffleArray(countries)[0].region, shuffleArray(countries)[0].label, shuffleArray(countries)[0].latlng];
     const bathrooms = faker.random.numeric()
     const guests = faker.random.numeric()
     const price =
@@ -94,7 +96,7 @@ async function main() {
       params.description,
       params.images.join(','),
       params.category,
-      params.location,
+      params.location.join(','),
       params.bathrooms,
       params.guests,
       params.rooms,

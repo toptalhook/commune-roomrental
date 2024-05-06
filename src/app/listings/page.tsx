@@ -1,5 +1,4 @@
 "use client";
-
 import React, { FC, Suspense } from "react";
 
 import ListingCard from "@/components/ListingCard";
