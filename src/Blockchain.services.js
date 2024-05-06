@@ -55,8 +55,12 @@ const connectWallet = async () => {
 }
 
 const createAppartment = async ({
-  name,
+  title,
   description,
+  category,
+  location,
+  bathrooms,
+  guests,
   rooms,
   images,
   price,
@@ -66,9 +70,13 @@ const createAppartment = async ({
     const contract = await getEtheriumContract()
     price = toWei(price)
     tx = await contract.createAppartment(
-      name,
+      title,
       description,
       images,
+      category,
+      location,
+      bathrooms,
+      guests,
       rooms,
       price,
       {
@@ -83,10 +91,14 @@ const createAppartment = async ({
 
 const updateApartment = async ({
   id,
-  name,
+  title,
   description,
   rooms,
   images,
+  category,
+  location,
+  bathrooms,
+  guests,
   price,
 }) => {
   try {
@@ -95,9 +107,13 @@ const updateApartment = async ({
     price = toWei(price)
     tx = await contract.updateAppartment(
       id,
-      name,
+      title,
       description,
       images,
+      category,
+      location,
+      bathrooms,
+      guests,
       rooms,
       price,
       {
@@ -283,12 +299,16 @@ const loadReviews = async (id) => {
 const structureAppartments = (appartments) =>
   appartments.map((appartment) => ({
     id: Number(appartment.id),
-    name: appartment.name,
+    title: appartment.title,
     owner: appartment.owner.toLowerCase(),
     description: appartment.description,
     price: parseInt(appartment.price._hex) / 10 ** 18,
     deleted: appartment.deleted,
     images: appartment.images.split(','),
+    category: appartment.category,
+    location: appartment.location,
+    bathrooms: Number(appartment.bathrooms),
+    guests: Number(appartment.guests),
     rooms: Number(appartment.rooms),
     timestamp: new Date(appartment.timestamp * 1000).toDateString(),
     booked: appartment.booked,

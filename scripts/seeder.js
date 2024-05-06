@@ -36,6 +36,11 @@ async function main() {
     'https://a0.muscache.com/im/pictures/3757edd0-8d4d-4d51-9d2e-3000e8c3797e.jpg?im_w=720',
     'https://a0.muscache.com/im/pictures/b7811ddd-b5e6-43ee-aa41-1fa28cf5ef95.jpg?im_w=720',
   ]
+  const categorys = [
+    'Beach', 'Windmills', 'Modern', 'Countryside', 'Pools', 'Islands',
+    'Lake', 'Skiing', 'Castles', 'Caves', 'Camping', 'Arctic', 'Desert',
+    'Barns', 'Lux'
+  ]
   let tx, result
 
   const shuffleArray = (array) => {
@@ -48,8 +53,12 @@ async function main() {
 
   const getParams = () => {
     const id = faker.random.numeric()
-    const name = faker.company.catchPhrase()
+    const title = faker.company.catchPhrase()
     const description = faker.lorem.paragraph()
+    const category = shuffleArray(categorys)[0]
+    const location = faker.address.country()
+    const bathrooms = faker.random.numeric()
+    const guests = faker.random.numeric()
     const price =
       faker.random.numeric({
         min: 0.1 * 100,
@@ -65,8 +74,12 @@ async function main() {
     }
     return {
       id,
-      name,
+      title,
       description,
+      category,
+      location,
+      bathrooms,
+      guests,
       price,
       images,
       rooms,
@@ -77,9 +90,13 @@ async function main() {
 
   const createAppartment = async (params) => {
     tx = await contract.functions.createAppartment(
-      params.name,
+      params.title,
       params.description,
       params.images.join(','),
+      params.category,
+      params.location,
+      params.bathrooms,
+      params.guests,
       params.rooms,
       toWei(params.price),
     )

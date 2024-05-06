@@ -11,9 +11,13 @@ contract Roomrental is Ownable, ReentrancyGuard {
 
     struct ApartmentStruct {
         uint id;
-        string name;
+        string title;
         string description;
         string images;
+        string category;
+        string location;
+        uint bathrooms;
+        uint guests;
         uint rooms;
         uint price;
         address owner;
@@ -59,24 +63,36 @@ contract Roomrental is Ownable, ReentrancyGuard {
     }
 
     function createAppartment(
-        string memory name,
+        string memory title,
         string memory description,
         string memory images,
+        string memory category,
+        string memory location,
+        uint bathrooms,
+        uint guests,
         uint rooms,
         uint price
     ) public {
-        require(bytes(name).length > 0, "Name cannot be empty");
+        require(bytes(title).length > 0, "title cannot be empty");
         require(bytes(description).length > 0, "Description cannot be empty");
         require(bytes(images).length > 0, "Images cannot be empty");
+        require(bytes(category).length > 0, "category cannot be empty");
+        require(bytes(location).length > 0, "location cannot be empty");
+        require(bathrooms > 0, "bathrooms cannot be zero");
+        require(guests > 0, "guests cannot be zero");
         require(rooms > 0, "Rooms cannot be zero");
         require(price > 0 ether, "Price cannot be zero");
 
         _totalAppartments.increment();
         ApartmentStruct memory lodge;
         lodge.id = _totalAppartments.current();
-        lodge.name = name;
+        lodge.title = title;
         lodge.description = description;
         lodge.images = images;
+        lodge.category = category;
+        lodge.location = location;
+        lodge.bathrooms = bathrooms;
+        lodge.guests = guests;
         lodge.rooms = rooms;
         lodge.price = price;
         lodge.owner = msg.sender;
@@ -91,24 +107,36 @@ contract Roomrental is Ownable, ReentrancyGuard {
     function updateAppartment
     (
         uint id,
-        string memory name,
+        string memory title,
         string memory description,
         string memory images,
+        string memory category,
+        string memory location,
+        uint bathrooms,
+        uint guests,
         uint rooms,
         uint price
     ) public {
         require(appartmentExist[id] == true, "Appartment not found");
         require(msg.sender == apartments[id].owner, "Unauthorized personnel, owner only");
-        require(bytes(name).length > 0, "Name cannot be empty");
+        require(bytes(title).length > 0, "title cannot be empty");
         require(bytes(description).length > 0, "Description cannot be empty");
         require(bytes(images).length > 0, "Images cannot be empty");
+         require(bytes(category).length > 0, "category cannot be empty");
+        require(bytes(location).length > 0, "location cannot be empty");
+        require(bathrooms > 0, "bathrooms cannot be zero");
+        require(guests > 0, "guests cannot be zero");
         require(rooms > 0, "Rooms cannot be zero");
         require(price > 0 ether, "Price cannot be zero");
         
         ApartmentStruct memory lodge = apartments[id];
-        lodge.name = name;
+        lodge.title = title;
         lodge.description = description;
         lodge.images = images;
+        lodge.category = category;
+        lodge.location = location;
+        lodge.bathrooms = bathrooms;
+        lodge.guests = guests;
         lodge.rooms = rooms;
         lodge.price = price;
         

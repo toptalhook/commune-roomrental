@@ -99,16 +99,18 @@ const RentModal = ({ onCloseModal }: { onCloseModal?: () => void }) => {
 
     startTransition(async () => {
       try {
+        console.log(data);
         const newListing = await createListing(data);
         toast.success(`${data.title} added successfully!`);
-        queryClient.invalidateQueries({
-          queryKey: ["listings"],
-        });
+        // queryClient.invalidateQueries({
+        //   queryKey: ["listings"],
+        // });
         reset();
         setStep(STEPS.CATEGORY);
         onCloseModal?.();
         router.refresh();
-        router.push(`/listings/${newListing.id}`);
+        // router.push(`/listings/${newListing.id}`);
+        router.push('/listings');
       } catch (error: any) {
         toast.error("Failed to create listing!");
         console.log(error?.message)

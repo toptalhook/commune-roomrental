@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "D:\\Papoi\\Work\\cooking\\commune-roomrental\\src\\contracts\\roomrental.sol": {
-      "lastModificationDate": 1714948821800,
-      "contentHash": "57c9e9c01f1b96e13bfecfa93ee9d38e",
+      "lastModificationDate": 1714959872363,
+      "contentHash": "dae6dfaa3b0ac08cf3b28133331b4608",
       "sourceName": "src/contracts/roomrental.sol",
       "solcConfig": {
         "version": "0.8.11",

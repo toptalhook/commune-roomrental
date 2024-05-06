@@ -154,26 +154,39 @@ export const createListing = async (data: { [x: string]: any }) => {
     }
   });
 
-  const user = await getCurrentUser();
-  if (!user) throw new Error("Unauthorized!");
+  const templocation = [region, country, latlng];
 
-  const listing = await db.listing.create({
-    data: {
-      title,
-      description,
-      imageSrc,
-      category,
-      roomCount,
-      bathroomCount,
-      guestCount,
-      country,
-      region,
-      latlng,
-      price: parseInt(price, 10),
-      userId: user.id,
-    },
-  });
+  const params = {
+    title,
+    description,
+    images: imageSrc.slice(0, imageSrc.length).join(","),
+    category,
+    location: templocation.slice(0, 3).join(","),
+    bathrooms: bathroomCount,
+    guests: guestCount,
+    rooms: roomCount,
+    price,
+  };
+  console.log(params);
+  // const user = await getCurrentUser();
+  // if (!user) throw new Error("Unauthorized!");
 
-  return listing;
+  // const listing = await db.listing.create({
+  //   data: {
+  //     title,
+  //     description,
+  //     imageSrc,
+  //     category,
+  //     roomCount,
+  //     bathroomCount,
+  //     guestCount,
+  //     country,
+  //     region,
+  //     latlng,
+  //     price: parseInt(price, 10),
+  //     userId: user.id,
+  //   },
+  // });
+
+  // return listing;
 };
-
