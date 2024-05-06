@@ -18,6 +18,7 @@ interface HomeProps {
 const Home: FC<HomeProps> = ({ searchParams }) => {
   // const { listings, nextCursor } = await getListings(searchParams);
   const [appartments] = useGlobalState("appartments");
+  console.log(appartments, "--------------");
   // const favorites = await getFavorites();
   // console.log(favorites)
   if (!appartments || appartments.length === 0) {
@@ -37,17 +38,6 @@ const Home: FC<HomeProps> = ({ searchParams }) => {
           <ListingCard key={index} data={appartment} hasFavorited={false} />
         );
       })}
-      {/* {nextCursor ? (
-        <Suspense fallback={<></>}>
-          <LoadMore
-            nextCursor={nextCursor}
-            fnArgs={searchParams}
-            queryFn={getListings}
-            queryKey={["listings", searchParams]}
-            favorites={favorites}
-          />
-        </Suspense>
-      ) : null} */}
     </section>
   );
 };

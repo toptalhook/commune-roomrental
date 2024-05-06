@@ -38,13 +38,16 @@ async function onSignInWithCrypto() {
 
     // Get the wallet provider, the signer and address
     //  see: https://docs.ethers.org/v6/getting-started/#starting-signing
-    const provider = new ethers.BrowserProvider(window.ethereum);
+    // const provider = new ethers.BrowserProvider(window.ethereum);
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = await provider.getSigner();
     const walletAddress = await signer.getAddress();
 
     const user = await createUser(walletAddress);
     // Sign the received nonce
-    const signedNonce = await signer.signMessage("Welcome to sign in ComHouse!");
+    const signedNonce = await signer.signMessage(
+      "Welcome to sign in ComHouse!"
+    );
 
     // Use NextAuth to sign in with our address and the nonce
     await signIn("crypto", {
@@ -53,7 +56,7 @@ async function onSignInWithCrypto() {
       callbackUrl: "/",
     });
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 }
 
@@ -68,7 +71,6 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
     <div className="relative">
       <div className="flex flex-row items-center gap-3">
         <Modal>
-
           {/* <button
               type="button"
               className="hidden md:block text-sm font-bold py-3 px-4 rounded-full hover:bg-neutral-100 transition cursor-pointer text-[#585858]"
@@ -76,10 +78,14 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
             >
               List homes
             </button> */}
-          <div onClick={() => { router.push('/listings') }} className="ml-[20px]">
+          <div
+            onClick={() => {
+              router.push("/listings");
+            }}
+            className="ml-[20px]"
+          >
             <BsHouseHeartFill className="w-[20px] h-[20px] hover:cursor-pointer" />
           </div>
-
 
           <Menu>
             <Menu.Toggle id="user-menu">

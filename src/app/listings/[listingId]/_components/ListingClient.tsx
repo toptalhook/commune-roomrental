@@ -16,6 +16,9 @@ import { useQueryClient } from "@tanstack/react-query";
 import ListingReservation from "./ListingReservation";
 import { createReservation } from "@/services/reservation";
 
+import moment from "moment";
+import { appartmentReservation } from "@/Blockchain.services";
+
 const initialDateRange = {
   startDate: new Date(),
   endDate: new Date(),
@@ -85,16 +88,36 @@ const ListingClient: React.FC<ListingClientProps> = ({
     startTransition(async () => {
       try {
         const { endDate, startDate } = dateRange;
-        await createReservation({
-          listingId: id,
-          endDate,
-          startDate,
-          totalPrice,
+
+        const start = moment(startDate);
+        const end = moment(endDate);
+        const timestampArray = [];
+
+        while (start <= end) {
+          timestampArray.push(start.valueOf());
+          start.add(1, "days");
+        }
+
+        const params = {
+          id,
+          datesArray: timestampArray,
+          amount: price * timestampArray.length,
+        };
+
+        await appartmentReservation(params).then(() => {
+          // router.push("/trips");
+          toast.success(`You've successfully reserved "${title}".`);
         });
-        router.push("/trips");
-        toast.success(`You've successfully reserved "${title}".`);
-        queryClient.invalidateQueries(["trips", user.id]);
-        queryClient.invalidateQueries(["reservations", user.id]);
+
+        // await createReservation({
+        //   listingId: id,
+        //   endDate,
+        //   startDate,
+        //   totalPrice,
+        // });
+
+        // queryClient.invalidateQueries(["trips", user.id]);
+        // queryClient.invalidateQueries(["reservations", user.id]);
       } catch (error: any) {
         toast.error(error?.message);
       }

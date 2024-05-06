@@ -10,7 +10,7 @@ const { setGlobalState, useGlobalState, getGlobalState } = createGlobalState({
   securityFee: null,
   reservations: [],
   reservation: null,
-  reservated: false,
+  reservated: [],
   status: null,
   timestamps: [],
   currentUser: null,

@@ -17,7 +17,8 @@ const queryClient = new QueryClient({
 
 const Providers = ({ children }: PropsWithChildren) => {
   const [connectedAccount] = useGlobalState("connectedAccount");
-
+  const reservated = getGlobalState("reservated");
+  console.log(reservated);
   useEffect(() => {
     const service = async () => {
       await isWallectConnected();

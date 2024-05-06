@@ -1,7 +1,8 @@
 import abi from './abis/src/contracts/roomrental.sol/Roomrental.json'
 import address from './abis/contractAddress.json'
-import { getGlobalState, setGlobalState } from './store'
+import { getGlobalState, setGlobalState, useGlobalState } from './store'
 import { ethers } from 'ethers'
+import { resetWarned } from 'antd/es/_util/warning'
 // import { logOutWithCometChat } from './services/Chat'
 
 // const { ethereum } = window;
@@ -148,10 +149,6 @@ const loadAppartments = async () => {
     const securityFee = await contract.securityFee()
     setGlobalState('appartments', structureAppartments(appartments))
     setGlobalState('securityFee', fromWei(securityFee))
-    console.log(structureAppartments(appartments));
-    // return (structureAppartments(appartments));
-    return 1;
-
   } catch (err) {
     console.log(err)
   }
@@ -174,12 +171,17 @@ const appartmentReservation = async ({ id, datesArray, amount }) => {
     const contract = await getEtheriumContract()
     const connectedAccount = getGlobalState('connectedAccount')
     const securityFee = getGlobalState('securityFee')
+    const reservated = getGlobalState("reservated");
 
     tx = await contract.reservateApartment(id, datesArray, {
       from: connectedAccount,
       value: toWei(Number(amount) + Number(securityFee)),
     })
+
     await tx.wait()
+    // reservated.push(id)
+    // setGlobalState('reservated', reservated);
+    console.log(reservated)
     await getUnavailableDates(id)
   } catch (err) {
     console.log(err)
