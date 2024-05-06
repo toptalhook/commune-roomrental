@@ -34,11 +34,7 @@ interface ListingClientProps {
   id: string;
   title: string;
   price: number;
-  user:
-    | (User & {
-        id: string;
-      })
-    | undefined;
+  user: any;
 }
 
 const ListingClient: React.FC<ListingClientProps> = ({
@@ -105,7 +101,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
         };
 
         await appartmentReservation(params).then(() => {
-          // router.push("/trips");
+          router.push("/trips");
           toast.success(`You've successfully reserved "${title}".`);
         });
 

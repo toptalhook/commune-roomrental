@@ -24,13 +24,12 @@ interface IParams {
 const ListingPage = ({ params: { listingId } }: { params: IParams }) => {
   // const listing = await getListingById(listingId);
   const [appartment] = useGlobalState("appartment");
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentUser] = useGlobalState("connectedAccount");
 
   useEffect(() => {
     const init = async () => {
       await loadAppartment(listingId);
       const user = await getCurrentUser();
-      setCurrentUser(user);
     };
     init();
   }, []);

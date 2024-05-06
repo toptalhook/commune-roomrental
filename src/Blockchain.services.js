@@ -43,7 +43,7 @@ const isWallectConnected = async () => {
       setGlobalState('connectedAccount', '')
     }
   } catch (error) {
-    console.log(error)
+    reportError(error)
   }
 }
 
@@ -53,10 +53,17 @@ const connectWallet = async () => {
     const accounts = await ethereum.request({ method: 'eth_requestAccounts' })
     setGlobalState('connectedAccount', accounts[0])
   } catch (error) {
-    console.log(error)
+    reportError(error)
   }
 }
 
+const disconnectWallet = async () => {
+  try {
+    setGlobalState('connectedAccount', null)
+  } catch (error) {
+    reportError(error)
+  }
+}
 const createAppartment = async ({
   title,
   description,
@@ -162,7 +169,7 @@ const loadAppartment = async (id) => {
     setGlobalState('appartment', structureAppartments([appartment])[0])
     setGlobalState('reservated', reservated)
   } catch (error) {
-    console.log(error)
+    reportError(error)
   }
 }
 
@@ -171,7 +178,8 @@ const appartmentReservation = async ({ id, datesArray, amount }) => {
     const contract = await getEtheriumContract()
     const connectedAccount = getGlobalState('connectedAccount')
     const securityFee = getGlobalState('securityFee')
-    const reservated = getGlobalState("reservated");
+    const reservatedId = getGlobalState("reservatedId");
+    const reservatedApartments = getGlobalState('reservatedAppartments');
 
     tx = await contract.reservateApartment(id, datesArray, {
       from: connectedAccount,
@@ -179,9 +187,11 @@ const appartmentReservation = async ({ id, datesArray, amount }) => {
     })
 
     await tx.wait()
-    // reservated.push(id)
-    // setGlobalState('reservated', reservated);
-    console.log(reservated)
+    const reservatedAppartment = await contract.getApartment(id)
+    reservatedApartments.unshift(structureAppartments([reservatedAppartment])[0])
+    reservatedId.unshift(id)
+    setGlobalState('reservatedId', reservatedId);
+    setGlobalState('reservatedAppartments', reservatedApartments);
     await getUnavailableDates(id)
   } catch (err) {
     console.log(err)
@@ -300,7 +310,7 @@ const loadReviews = async (id) => {
     const reviews = await contract.getReviews(id)
     setGlobalState('reviews', structuredReviews(reviews))
   } catch (error) {
-    console.log(error)
+    reportError(error)
   }
 }
 
@@ -344,6 +354,7 @@ const structuredReservations = (reservations) =>
 export {
   isWallectConnected,
   connectWallet,
+  disconnectWallet,
   createAppartment,
   loadAppartments,
   loadAppartment,

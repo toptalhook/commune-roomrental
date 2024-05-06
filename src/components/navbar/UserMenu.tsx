@@ -17,10 +17,13 @@ import AuthModal from "../modals/AuthModal";
 import { menuItems } from "@/utils/constants";
 import { BsHouseHeartFill } from "react-icons/bs";
 
+import { connectWallet, disconnectWallet } from "@/Blockchain.services";
+
 interface UserMenuProps {
-  user?: User & {
-    id: string;
-  };
+  // user?: User & {
+  //   id: string;
+  // };
+  user?: any;
 }
 
 declare global {
@@ -113,12 +116,17 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
                   <Modal.Trigger name="share">
                     <MenuItem label="Share your home" />
                   </Modal.Trigger>
-                  <hr />
-                  <MenuItem label="Log out" onClick={signOut} />
+                  {/* <hr /> */}
+                  {/* <MenuItem label="Log out" onClick={signOut} /> */}
+                  {/* <MenuItem
+                    label="Disconnect Wallet"
+                    onClick={disconnectWallet}
+                  /> */}
                 </>
               ) : (
                 <>
-                  <MenuItem label="Log in" onClick={onSignInWithCrypto} />
+                  {/* <MenuItem label="Log in" onClick={onSignInWithCrypto} /> */}
+                  <MenuItem label="Connect Wallet" onClick={connectWallet} />
                 </>
               )}
             </Menu.List>
