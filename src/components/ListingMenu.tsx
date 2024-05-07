@@ -14,8 +14,8 @@ import { deleteReservation } from "@/services/reservation";
 
 const pathNameDict: { [x: string]: string } = {
   "/properties": "Delete property",
-  "/trips": "Cancel reservation",
-  "/reservations": "Cancel guest reservation",
+  "/trips": "Check your reservations",
+  "/reservations": "Check guest reservations",
 };
 
 interface ListingMenuProps {
@@ -54,7 +54,7 @@ const ListingMenu: FC<ListingMenuProps> = ({ id }) => {
         }
       } catch (error) {
         toast.error("Oops! Something went wrong. Please try again later.");
-        onModalClose?.()
+        onModalClose?.();
       }
     });
   };

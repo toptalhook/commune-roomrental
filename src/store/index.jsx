@@ -8,10 +8,10 @@ const { setGlobalState, useGlobalState, getGlobalState } = createGlobalState({
   authModal: "scale-0",
   reviewModal: "scale-0",
   securityFee: null,
-  reservations: [],
+  reservations: [], //reservations in that apartment
   reservation: null,
   reservated: false,
-  reservatedId:[],
+  all_reservated:[],
   reservatedAppartments:[],
   status: null,
   timestamps: [],

@@ -178,7 +178,7 @@ const appartmentReservation = async ({ id, datesArray, amount }) => {
     const contract = await getEtheriumContract()
     const connectedAccount = getGlobalState('connectedAccount')
     const securityFee = getGlobalState('securityFee')
-    const reservatedId = getGlobalState("reservatedId");
+    const all_reservated = getGlobalState("all_reservated");
     const reservatedApartments = getGlobalState('reservatedAppartments');
 
     tx = await contract.reservateApartment(id, datesArray, {
@@ -190,7 +190,13 @@ const appartmentReservation = async ({ id, datesArray, amount }) => {
     const reservatedAppartment = await contract.getApartment(id)
     reservatedApartments.unshift(structureAppartments([reservatedAppartment])[0])
     reservatedId.unshift(id)
-    setGlobalState('reservatedId', reservatedId);
+
+    const reservations = await contract.getReservations(id, {
+      from: connectedAccount,
+    })
+
+    all_reservated.unshift(reservations);
+    setGlobalState('all_reservated', all_reservated);
     setGlobalState('reservatedAppartments', reservatedApartments);
     await getUnavailableDates(id)
   } catch (err) {
