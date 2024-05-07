@@ -21,7 +21,7 @@ contract Roomrental is Ownable, ReentrancyGuard {
         uint rooms;
         uint price;
         address owner;
-        bool reservateed;
+        bool reservated;
         bool deleted;
         bool availablity;
         uint timestamp;
@@ -54,8 +54,8 @@ contract Roomrental is Ownable, ReentrancyGuard {
     mapping(uint => ReviewStruct[]) reviewsOf;
     mapping(uint => bool) appartmentExist;
     mapping(uint => uint[]) reservatedDates;
-    mapping(uint => mapping(uint => bool)) isDateBooked;
-    mapping(address => mapping(uint => bool)) hasBooked;
+    mapping(uint => mapping(uint => bool)) isDateReservated;
+    mapping(address => mapping(uint => bool)) hasReservated;
 
     constructor(uint _taxPercent, uint _securityFee) {
         taxPercent = _taxPercent;
@@ -177,7 +177,7 @@ contract Roomrental is Ownable, ReentrancyGuard {
     function reservateApartment(uint id, uint[] memory dates) public payable {    
         require(appartmentExist[id], "Apartment not found!");
         require(msg.value >= apartments[id].price * dates.length + securityFee, "Insufficient fund!");
-        require(datesAreCleared(id, dates), "Booked date found among dates!");
+        require(datesAreCleared(id, dates), "Reservated date found among dates!");
 
         for (uint i = 0; i < dates.length; i++) {
             ReservationStruct memory reservation;
@@ -186,7 +186,7 @@ contract Roomrental is Ownable, ReentrancyGuard {
             reservation.date = dates[i];
             reservation.price = apartments[id].price;
             reservationsOf[id].push(reservation);            
-            isDateBooked[id][dates[i]] = true;
+            isDateReservated[id][dates[i]] = true;
             reservatedDates[id].push(dates[i]);
         }
     }
@@ -209,7 +209,7 @@ contract Roomrental is Ownable, ReentrancyGuard {
        uint price = reservationsOf[id][reservationId].price;
        uint fee = (price * taxPercent) / 100;
 
-       hasBooked[msg.sender][id] = true;
+       hasReservated[msg.sender][id] = true;
     
        payTo(apartments[id].owner, (price - fee));
        payTo(owner(), fee);
@@ -237,7 +237,7 @@ contract Roomrental is Ownable, ReentrancyGuard {
         }
 
         reservationsOf[id][reservationId].cancelled = true;
-        isDateBooked[id][date] = false;
+        isDateReservated[id][date] = false;
 
         uint lastIndex = reservatedDates[id].length - 1;
         uint lastReservationId = reservatedDates[id][lastIndex];
@@ -254,7 +254,7 @@ contract Roomrental is Ownable, ReentrancyGuard {
    }
 
 
-    function hasBookedDateReached(uint id,uint reservationId) public view returns(bool) {
+    function hasReservatedDateReached(uint id,uint reservationId) public view returns(bool) {
         return reservationsOf[id][reservationId].date < currentTime();
     }
 
@@ -287,7 +287,7 @@ contract Roomrental is Ownable, ReentrancyGuard {
 
     function addReview(uint appartmentId, string memory reviewText) public {
         require(appartmentExist[appartmentId],"Appartment not available");
-        require(hasBooked[msg.sender][appartmentId],"Book first before review");
+        require(hasReservated[msg.sender][appartmentId],"Book first before review");
         require(bytes(reviewText).length > 0, "Review text cannot be empty");
 
         ReviewStruct memory review;
@@ -305,8 +305,8 @@ contract Roomrental is Ownable, ReentrancyGuard {
         return reviewsOf[appartmentId];
     }
     
-    function tenantBooked(uint appartmentId) public view returns (bool) {
-        return hasBooked[msg.sender][appartmentId];
+    function tenantReservated(uint appartmentId) public view returns (bool) {
+        return hasReservated[msg.sender][appartmentId];
     }
 
     function currentTime() internal view returns (uint256) {

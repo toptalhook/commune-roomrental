@@ -13,7 +13,7 @@ import { categories } from "@/utils/constants";
 import { Reviewdetails } from "@/components/Reviewdetails";
 
 import { useGlobalState } from "@/store";
-import { loadAppartment } from "@/Blockchain.services";
+import { getReservations, loadAppartment } from "@/Blockchain.services";
 
 import { useRouter } from "next/navigation";
 
@@ -22,13 +22,14 @@ interface IParams {
 }
 
 const ListingPage = ({ params: { listingId } }: { params: IParams }) => {
-  // const listing = await getListingById(listingId);
   const [appartment] = useGlobalState("appartment");
+  const [reservations] = useGlobalState("reservations");
   const [currentUser] = useGlobalState("connectedAccount");
 
   useEffect(() => {
     const init = async () => {
       await loadAppartment(listingId);
+      await getReservations(listingId);
       const user = await getCurrentUser();
     };
     init();
@@ -69,7 +70,7 @@ const ListingPage = ({ params: { listingId } }: { params: IParams }) => {
       <ListingClient
         id={id}
         price={price}
-        // reservations={reservations}
+        reservations={reservations}
         user={currentUser}
         title={title}
       >

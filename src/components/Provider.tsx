@@ -5,7 +5,8 @@ import { Toaster } from "react-hot-toast";
 import { SessionProvider } from "next-auth/react";
 
 import { isWallectConnected, loadAppartments } from "@/Blockchain.services";
-import { useGlobalState, getGlobalState } from "@/store";
+import { useGlobalState, getGlobalState, setGlobalState } from "@/store";
+import { loadavg } from "os";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -17,16 +18,18 @@ const queryClient = new QueryClient({
 
 const Providers = ({ children }: PropsWithChildren) => {
   const [connectedAccount] = useGlobalState("connectedAccount");
-  const [reservations] = useGlobalState("reservations");
+  // const [all_reservations] = useGlobalState("all_reservations");
 
-  console.log(reservations, "-----------------");
+  const loadData = async () => {
+    await isWallectConnected();
+    await loadAppartments();
+  };
+
   useEffect(() => {
-    const service = async () => {
-      await isWallectConnected();
-      await loadAppartments();
-    };
-    service();
+    loadData();
   }, [connectedAccount]);
+
+  // console.log(all_reservations);
   return (
     <QueryClientProvider client={queryClient}>
       <SessionProvider>

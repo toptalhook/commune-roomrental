@@ -29,22 +29,21 @@ interface ListingCardProps {
     owner: string;
     price: number;
   };
-  reservation?: {
+  reservations?: {
     id: string;
-    startDate: Date;
-    endDate: Date;
-    totalPrice: number;
-  };
+    date: Date;
+    price: number;
+  }[];
   hasFavorited: boolean;
 }
 
 const ListingCard: React.FC<ListingCardProps> = ({
   data,
-  reservation,
+  reservations,
   hasFavorited,
 }) => {
   const router = useRouter();
-  const price = reservation ? reservation.totalPrice : data?.price;
+  const price = reservations ? reservations.length * data?.price : data?.price;
   const [displayIndex, setDisplayIndex] = useState(0);
   const [showbutton, setShowButton] = useState(false);
 
@@ -53,9 +52,9 @@ const ListingCard: React.FC<ListingCardProps> = ({
   };
 
   let reservationDate;
-  if (reservation) {
-    const start = new Date(reservation.startDate);
-    const end = new Date(reservation.endDate);
+  if (reservations) {
+    const start = new Date(reservations[0].date);
+    const end = new Date(reservations[reservations.length - 1].date);
     reservationDate = `${format(start, "PP")} - ${format(end, "PP")}`;
   }
 
@@ -63,7 +62,8 @@ const ListingCard: React.FC<ListingCardProps> = ({
     <div className="relative shadow-lg md:rounded-b-lg rounded-b-md hover:cursor-pointer">
       <div className="absolute top-0 left-0 p-3 flex items-center justify-between w-full">
         <div className="z-5">
-          <ListingMenu id={reservation?.id || data.id} />
+          {/* <ListingMenu id={reservation?.id || data.id} /> */}
+          <ListingMenu id={data.id} />
         </div>
 
         <div className="w-[28px] h-[28px] flex items-center justify-center">
@@ -133,7 +133,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
             <span className="font-bold text-[#444] text-[14px]">
               ETH {formatPrice(price)}
             </span>
-            {!reservation && <span className="font-light">night</span>}
+            {!reservations && <span className="font-light">night</span>}
           </div>
         </div>
       </div>

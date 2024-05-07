@@ -11,6 +11,8 @@ import ConfirmDelete from "./ConfirmDelete";
 
 import { deleteProperty } from "@/services/properties";
 import { deleteReservation } from "@/services/reservation";
+import { deleteAppartment } from "@/Blockchain.services";
+import { error } from "console";
 
 const pathNameDict: { [x: string]: string } = {
   "/properties": "Delete property",
@@ -24,8 +26,15 @@ interface ListingMenuProps {
 
 const ListingMenu: FC<ListingMenuProps> = ({ id }) => {
   const pathname = usePathname();
+
+  const DeleteAppartment = async (id: string) => {
+    await deleteAppartment(id)
+      .then()
+      .catch((error) => console.error(error));
+  };
+
   const { mutate: deleteListing } = useMutation({
-    mutationFn: deleteProperty,
+    mutationFn: DeleteAppartment,
   });
   const { mutate: cancelReservation } = useMutation({
     mutationFn: deleteReservation,
@@ -35,15 +44,12 @@ const ListingMenu: FC<ListingMenuProps> = ({ id }) => {
   if (pathname === "/listings" || pathname === "/favorites") return null;
 
   const onConfirm = (onModalClose?: () => void) => {
-    startTransition(() => {
+    startTransition(async () => {
       try {
         if (pathname === "/properties") {
-          deleteListing(id, {
-            onSuccess: () => {
-              onModalClose?.();
-              toast.success("Listing successfully deleted!");
-            },
-          });
+          await DeleteAppartment(id);
+          onModalClose?.();
+          toast.success("Apartment successfully deleted!");
         } else if (pathname === "/trips" || pathname === "/reservations") {
           cancelReservation(id, {
             onSuccess: () => {

@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { BiDollar } from "react-icons/bi";
+import { FaEthereum } from "react-icons/fa";
 
 import Modal from "./Modal";
 import Button from "../Button";
@@ -247,7 +248,9 @@ const RentModal = ({ onCloseModal }: { onCloseModal?: () => void }) => {
               key="price"
               id="price"
               label="Price"
-              icon={BiDollar}
+              icon={FaEthereum}
+              step={0.01}
+              min={0.01}
               type="number"
               disabled={isLoading}
               register={register}

@@ -32,37 +32,6 @@ declare global {
   }
 }
 
-async function onSignInWithCrypto() {
-  try {
-    if (!window.ethereum) {
-      window.alert("Please install MetaMask first.");
-      return;
-    }
-
-    // Get the wallet provider, the signer and address
-    //  see: https://docs.ethers.org/v6/getting-started/#starting-signing
-    // const provider = new ethers.BrowserProvider(window.ethereum);
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = await provider.getSigner();
-    const walletAddress = await signer.getAddress();
-
-    const user = await createUser(walletAddress);
-    // Sign the received nonce
-    const signedNonce = await signer.signMessage(
-      "Welcome to sign in ComHouse!"
-    );
-
-    // Use NextAuth to sign in with our address and the nonce
-    await signIn("crypto", {
-      walletAddress,
-      signedNonce,
-      callbackUrl: "/",
-    });
-  } catch (error) {
-    console.log(error);
-  }
-}
-
 const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
   const router = useRouter();
 

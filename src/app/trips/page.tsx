@@ -17,6 +17,7 @@ const TripsPage = () => {
   // const favorites = await getFavorites();
   const [user] = useGlobalState("connectedAccount");
   const [reservatedAppartments] = useGlobalState("reservatedAppartments");
+  const [all_reservations] = useGlobalState("all_reservations");
 
   if (!user) {
     return <EmptyState title="Unauthorized" subtitle="Please login" />;
@@ -48,7 +49,7 @@ const TripsPage = () => {
             <ListingCard
               key={index}
               data={reservatedAppartment}
-              reservation={undefined}
+              reservations={all_reservations[index]}
               hasFavorited={false}
             />
           );

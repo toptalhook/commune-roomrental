@@ -154,8 +154,35 @@ const loadAppartments = async () => {
     const contract = await getEtheriumContract()
     const appartments = await contract.getApartments()
     const securityFee = await contract.securityFee()
+
+
     setGlobalState('appartments', structureAppartments(appartments))
     setGlobalState('securityFee', fromWei(securityFee))
+
+    const appartmentsdata = getGlobalState("appartments");
+    const connectedAccount = getGlobalState('connectedAccount');
+
+    const myAppartments = appartmentsdata.filter(
+      (item) => item.owner === connectedAccount
+    );
+
+    const t_reservatedAppartments = [];
+    const t_allreservations = [];
+
+    for (const item of appartmentsdata) {
+      const reservation = await contract.getReservations(item.id, {
+        from: connectedAccount,
+      });
+      if (structuredReservations(reservation).length !== 0) {
+        t_reservatedAppartments.push(item);
+        t_allreservations.push(structuredReservations(reservation));
+      }
+    }
+
+    setGlobalState("reservatedAppartments", t_reservatedAppartments);
+    setGlobalState("all_reservations", t_allreservations);
+    setGlobalState("myappartments", myAppartments);
+
   } catch (err) {
     console.log(err)
   }
@@ -165,7 +192,7 @@ const loadAppartment = async (id) => {
   try {
     const contract = await getEtheriumContract()
     const appartment = await contract.getApartment(id)
-    const reservated = await contract.tenantBooked(id)
+    const reservated = await contract.tenantReservated(id)
     setGlobalState('appartment', structureAppartments([appartment])[0])
     setGlobalState('reservated', reservated)
   } catch (error) {
@@ -178,7 +205,7 @@ const appartmentReservation = async ({ id, datesArray, amount }) => {
     const contract = await getEtheriumContract()
     const connectedAccount = getGlobalState('connectedAccount')
     const securityFee = getGlobalState('securityFee')
-    const all_reservated = getGlobalState("all_reservated");
+    const all_reservations = getGlobalState("all_reservations");
     const reservatedApartments = getGlobalState('reservatedAppartments');
 
     tx = await contract.reservateApartment(id, datesArray, {
@@ -188,14 +215,13 @@ const appartmentReservation = async ({ id, datesArray, amount }) => {
 
     await tx.wait()
     const reservatedAppartment = await contract.getApartment(id)
-    reservatedApartments.unshift(structureAppartments([reservatedAppartment])[0])
-    reservatedId.unshift(id)
+    reservatedApartments.push(structureAppartments([reservatedAppartment])[0])
 
     const reservations = await contract.getReservations(id, {
       from: connectedAccount,
     })
 
-    all_reservated.unshift(reservations);
+    all_reservations.push(structuredReservations(reservations));
     setGlobalState('all_reservated', all_reservated);
     setGlobalState('reservatedAppartments', reservatedApartments);
     await getUnavailableDates(id)
@@ -256,11 +282,11 @@ const getUnavailableDates = async (id) => {
   setGlobalState('timestamps', timestamps)
 }
 
-const hasBookedDateReached = async ({ id, reservationId }) => {
+const hasReservatedDateReached = async ({ id, reservationId }) => {
   try {
     const connectedAccount = getGlobalState('connectedAccount')
     const contract = await getEtheriumContract()
-    const result = await contract.hasBookedDateReached(id, reservationId, {
+    const result = await contract.hasReservatedDateReached(id, reservationId, {
       from: connectedAccount,
     })
     setGlobalState('status', result)
@@ -372,7 +398,7 @@ export {
   getUnavailableDates,
   getReservations,
   getReservation,
-  hasBookedDateReached,
+  hasReservatedDateReached,
   refund,
   checkInApartment,
   claimFunds,

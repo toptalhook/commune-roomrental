@@ -16,9 +16,7 @@ interface HomeProps {
 }
 
 const Home: FC<HomeProps> = ({ searchParams }) => {
-  // const { listings, nextCursor } = await getListings(searchParams);
   const [appartments] = useGlobalState("appartments");
-  console.log(appartments, "--------------");
   // const favorites = await getFavorites();
   // console.log(favorites)
   if (!appartments || appartments.length === 0) {

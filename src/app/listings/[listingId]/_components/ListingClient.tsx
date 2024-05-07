@@ -26,10 +26,9 @@ const initialDateRange = {
 };
 
 interface ListingClientProps {
-  // reservations?: {
-  //   startDate: Date;
-  //   endDate: Date;
-  // }[];
+  reservations?: {
+    date: Date;
+  }[];
   children: ReactNode;
   id: string;
   title: string;
@@ -39,7 +38,7 @@ interface ListingClientProps {
 
 const ListingClient: React.FC<ListingClientProps> = ({
   price,
-  // reservations = [],
+  reservations = [],
   children,
   user,
   id,
@@ -51,18 +50,18 @@ const ListingClient: React.FC<ListingClientProps> = ({
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  // const disabledDates = useMemo(() => {
-  //   let dates: Date[] = [];
-  //   reservations.forEach((reservation) => {
-  //     const range = eachDayOfInterval({
-  //       start: new Date(reservation.startDate),
-  //       end: new Date(reservation.endDate),
-  //     });
+  const disabledDates = useMemo(() => {
+    let dates: Date[] = [];
+    reservations.forEach((reservation) => {
+      const range = eachDayOfInterval({
+        start: new Date(reservation.date),
+        end: new Date(reservation.date),
+      });
 
-  //     dates = [...dates, ...range];
-  //   });
-  //   return dates;
-  // }, [reservations]);
+      dates = [...dates, ...range];
+    });
+    return dates;
+  }, [reservations]);
 
   useEffect(() => {
     if (dateRange.startDate && dateRange.endDate) {
@@ -72,7 +71,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
       );
 
       if (dayCount && price) {
-        setTotalPrice(dayCount * price);
+        setTotalPrice((dayCount + 1) * price);
       } else {
         setTotalPrice(price);
       }
@@ -132,7 +131,7 @@ const ListingClient: React.FC<ListingClientProps> = ({
           dateRange={dateRange}
           onSubmit={onCreateReservation}
           isLoading={isLoading}
-          // disabledDates={disabledDates}
+          disabledDates={disabledDates}
         />
       </div>
     </div>

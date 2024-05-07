@@ -2,6 +2,7 @@ import { createGlobalState } from "react-hooks-global-state";
 
 const { setGlobalState, useGlobalState, getGlobalState } = createGlobalState({
   appartments: [],
+  myappartments:[],
   appartment: null,
   reviews: [],
   connectedAccount: "",
@@ -11,7 +12,7 @@ const { setGlobalState, useGlobalState, getGlobalState } = createGlobalState({
   reservations: [], //reservations in that apartment
   reservation: null,
   reservated: false,
-  all_reservated:[],
+  all_reservations:[],
   reservatedAppartments:[],
   status: null,
   timestamps: [],
