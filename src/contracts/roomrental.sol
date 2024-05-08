@@ -44,6 +44,13 @@ contract Roomrental is Ownable, ReentrancyGuard {
         address owner;
     }
 
+    struct FavoriteStruct {
+        uint id;
+        uint appartmentId;
+        address guest;
+        bool hasfavorited;
+    }
+
     event SecurityFeeUpdated(uint newFee);
 
     uint public securityFee;
@@ -52,6 +59,7 @@ contract Roomrental is Ownable, ReentrancyGuard {
     mapping(uint => ApartmentStruct) apartments;
     mapping(uint => ReservationStruct[]) reservationsOf;
     mapping(uint => ReviewStruct[]) reviewsOf;
+    mapping(uint => FavoriteStruct) favoriteOf;
     mapping(uint => bool) appartmentExist;
     mapping(uint => uint[]) reservatedDates;
     mapping(uint => mapping(uint => bool)) isDateReservated;
@@ -313,5 +321,20 @@ contract Roomrental is Ownable, ReentrancyGuard {
         uint256 newNum = (block.timestamp * 1000) + 1000;
         return newNum;
     }
+
+    function favoriteApartment(uint id, bool hasFavorited) public {
+        require(appartmentExist[id], "Apartment not found!");
+
+        FavoriteStruct memory favorite;
+        favorite.id = id;
+        favorite.guest = msg.sender;
+        favorite.hasfavorited = hasFavorited;
+
+        favoriteOf[id] = favorite;
+    }
+
+    function getFavorites(uint id) public view returns (FavoriteStruct memory) {
+        return favoriteOf[id];
+    } 
 }
 

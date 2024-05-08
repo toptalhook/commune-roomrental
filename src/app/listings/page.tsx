@@ -17,6 +17,7 @@ interface HomeProps {
 
 const Home: FC<HomeProps> = ({ searchParams }) => {
   const [appartments] = useGlobalState("appartments");
+  const [all_hasfavorites] = useGlobalState("all_hasfavorites");
   // const favorites = await getFavorites();
   // console.log(favorites)
   if (!appartments || appartments.length === 0) {
@@ -31,9 +32,13 @@ const Home: FC<HomeProps> = ({ searchParams }) => {
   return (
     <section className=" main-container pt-16 grid  grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-8">
       {appartments.map((appartment, index) => {
-        // const hasFavorited = favorites.includes(listing.id);
+        console.log(all_hasfavorites[index]);
         return (
-          <ListingCard key={index} data={appartment} hasFavorited={false} />
+          <ListingCard
+            key={index}
+            data={appartment}
+            hasFavorited={all_hasfavorites[index]}
+          />
         );
       })}
     </section>

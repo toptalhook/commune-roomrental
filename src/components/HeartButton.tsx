@@ -8,6 +8,7 @@ import { useSession } from "next-auth/react";
 
 import { cn } from "@/utils/helper";
 import { updateFavorite } from "@/services/favorite";
+import { favoriteApartment } from "@/Blockchain.services";
 
 interface HeartButtonProps {
   listingId: string;
@@ -21,19 +22,28 @@ const HeartButton: React.FC<HeartButtonProps> = ({
   const { status } = useSession();
   const [hasFavorited, setHasFavorited] = useState(initialValue);
   const hasFavoritedRef = useRef(initialValue);
+  const favorite = async ({
+    id,
+    hasFavorited,
+  }: {
+    id: number;
+    hasFavorited: boolean;
+  }) => {
+    await favoriteApartment({ id, hasFavorited });
+  };
   const { mutate } = useMutation({
-    mutationFn: updateFavorite,
+    mutationFn: favorite,
     onError: () => {
       hasFavoritedRef.current = !hasFavoritedRef.current;
       setHasFavorited(hasFavoritedRef.current);
       toast.error("Failed to favorite");
-    }
+    },
   });
 
   const debouncedUpdateFavorite = debounce(() => {
     mutate({
-      listingId,
-      favorite: hasFavoritedRef.current,
+      id: Number(listingId),
+      hasFavorited: hasFavoritedRef.current,
     });
   }, 300);
 
@@ -46,10 +56,10 @@ const HeartButton: React.FC<HeartButtonProps> = ({
     e.stopPropagation();
     e.preventDefault();
 
-    if (status !== "authenticated") {
-      toast.error("Please sign in to favorite the listing!");
-      return;
-    }
+    // if (status !== "authenticated") {
+    //   toast.error("Please sign in to favorite the listing!");
+    //   return;
+    // }
 
     handleUpdate();
     setHasFavorited((prev) => !prev);

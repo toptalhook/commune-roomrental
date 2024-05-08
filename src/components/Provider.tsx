@@ -18,7 +18,7 @@ const queryClient = new QueryClient({
 
 const Providers = ({ children }: PropsWithChildren) => {
   const [connectedAccount] = useGlobalState("connectedAccount");
-  // const [all_reservations] = useGlobalState("all_reservations");
+  const [all_reservations] = useGlobalState("all_hasfavorites");
 
   const loadData = async () => {
     await isWallectConnected();
@@ -29,7 +29,7 @@ const Providers = ({ children }: PropsWithChildren) => {
     loadData();
   }, [connectedAccount]);
 
-  // console.log(all_reservations);
+  console.log(all_reservations);
   return (
     <QueryClientProvider client={queryClient}>
       <SessionProvider>

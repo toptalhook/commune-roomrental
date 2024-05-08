@@ -168,11 +168,21 @@ const loadAppartments = async () => {
 
     const t_reservatedAppartments = [];
     const t_allreservations = [];
+    const all_hasfavorites = [];
 
     for (const item of appartmentsdata) {
       const reservation = await contract.getReservations(item.id, {
         from: connectedAccount,
       });
+
+      const favorites = await contract.getFavorites(item.id, {
+        from: connectedAccount
+      });
+
+      if (structedFavorites([favorites])[0].guest != connectedAccount)
+        all_hasfavorites.push(false)
+      else all_hasfavorites.push(structedFavorites([favorites])[0].hasfavorited)
+      // console.log(structedFavorites([favorites])[0].guest, '-------------')
       if (structuredReservations(reservation).length !== 0) {
         t_reservatedAppartments.push(item);
         t_allreservations.push(structuredReservations(reservation));
@@ -181,6 +191,7 @@ const loadAppartments = async () => {
 
     setGlobalState("reservatedAppartments", t_reservatedAppartments);
     setGlobalState("all_reservations", t_allreservations);
+    setGlobalState("all_hasfavorites", all_hasfavorites);
     setGlobalState("myappartments", myAppartments);
 
   } catch (err) {
@@ -346,6 +357,21 @@ const loadReviews = async (id) => {
   }
 }
 
+const favoriteApartment = async ({ id, hasFavorited }) => {
+  try {
+    if (!ethereum) return alert('Please install Metamask')
+    const connectedAccount = getGlobalState('connectedAccount')
+    const contract = await getEtheriumContract()
+    console.log(id, hasFavorited)
+    tx = await contract.favoriteApartment(id, hasFavorited, {
+      from: connectedAccount
+    })
+
+    await tx.wait()
+  } catch (err) {
+    console.log(err)
+  }
+}
 const structureAppartments = (appartments) =>
   appartments.map((appartment) => ({
     id: Number(appartment.id),
@@ -383,6 +409,12 @@ const structuredReservations = (reservations) =>
     cancelled: reservation.cancelled,
   }))
 
+const structedFavorites = (favorites) =>
+  favorites.map((favorite) => ({
+    id: favorite.id.toNumber(),
+    guest: favorite.guest.toLowerCase(),
+    hasfavorited: favorite.hasfavorited,
+  }))
 export {
   isWallectConnected,
   connectWallet,
@@ -402,4 +434,5 @@ export {
   refund,
   checkInApartment,
   claimFunds,
+  favoriteApartment,
 }

@@ -11,7 +11,7 @@ const FavoritesPage = async () => {
   const user = await getCurrentUser();
 
   if (!user) {
-    return <EmptyState title="Unauthorized" subtitle="Please login" />;
+    return <EmptyState title="Unauthorized" subtitle="Please connect wallet" />;
   }
 
   const favorites = await getFavoriteListings();
