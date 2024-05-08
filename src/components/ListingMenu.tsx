@@ -51,9 +51,10 @@ const ListingMenu: FC<ListingMenuProps> = ({ id }) => {
     startTransition(async () => {
       try {
         if (pathname === "/properties") {
-          await DeleteAppartment(id);
-          onModalClose?.();
-          toast.success("Apartment successfully deleted!");
+          await DeleteAppartment(id).then(() => {
+            onModalClose?.();
+            toast.success("Apartment successfully deleted!");
+          });
         } else if (pathname === "/trips") {
           checkReservation(id, {
             onSuccess: () => {

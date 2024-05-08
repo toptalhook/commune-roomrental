@@ -11,6 +11,7 @@ import { getCurrentUser } from "@/services/user";
 import { getReservations } from "@/services/reservation";
 import { getFavorites } from "@/services/favorite";
 import { useGlobalState } from "@/store";
+import { userAgent } from "next/server";
 
 const TripsPage = () => {
   // const user = await getCurrentUser();
@@ -18,6 +19,7 @@ const TripsPage = () => {
   const [user] = useGlobalState("connectedAccount");
   const [reservatedAppartments] = useGlobalState("reservatedAppartments");
   const [all_reservations] = useGlobalState("all_reservations");
+  const [all_hasfavorites] = useGlobalState("all_hasfavorites");
 
   if (!user) {
     return <EmptyState title="Unauthorized" subtitle="Please login" />;
@@ -45,12 +47,13 @@ const TripsPage = () => {
         {reservatedAppartments.map((reservatedAppartment, index) => {
           // const { reservation, ...data } = listing;
           // const hasFavorited = favorites.includes(listing.id);
+          const { id } = reservatedAppartment;
           return (
             <ListingCard
               key={index}
               data={reservatedAppartment}
               reservations={all_reservations[index]}
-              hasFavorited={false}
+              hasFavorited={all_hasfavorites[id - 1]}
             />
           );
         })}
