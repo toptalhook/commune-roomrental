@@ -29,7 +29,7 @@ const Providers = ({ children }: PropsWithChildren) => {
     loadData();
   }, [connectedAccount]);
 
-  console.log(all_reservations);
+  // console.log(all_reservations);
   return (
     <QueryClientProvider client={queryClient}>
       <SessionProvider>

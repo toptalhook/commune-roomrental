@@ -341,11 +341,11 @@ const getReservation = async ({ id, reservationId }) => {
   }
 }
 
-const addReview = async (id, reviewText) => {
+const addReview = async ({ id, reviewText, cleanliness, accuracy, check_in, communication, location_score, value }) => {
   try {
     if (!ethereum) return alert('Please install Metamask')
     const contract = await getEtheriumContract()
-    tx = await contract.addReview(id, reviewText)
+    tx = await contract.addReview(id, reviewText, cleanliness, accuracy, check_in, communication, location_score, value)
     await tx.wait()
 
     await loadReviews(id)
@@ -402,6 +402,12 @@ const structuredReviews = (reviews) =>
     id: review.id.toNumber(),
     appartmentId: review.appartmentId.toNumber(),
     reviewText: review.reviewText,
+    cleanliness: review.cleanliness.toNumber(),
+    accuracy: review.accuracy.toNumber(),
+    check_in: review.check_in.toNumber(),
+    communication: review.communication.toNumber(),
+    location_score: review.location_score.toNumber(),
+    value: review.value.toNumber(),
     owner: review.owner.toLowerCase(),
     timestamp: new Date(review.timestamp * 1000).toDateString(),
   }))

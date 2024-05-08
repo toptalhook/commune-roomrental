@@ -169,7 +169,7 @@ export const createListing = async (data: { [x: string]: any }) => {
     rooms: roomCount,
     price,
   };
-  console.log(params, "---------------");
+  // console.log(params, "---------------");
 
   // const user = await getCurrentUser();
   // if (!user) throw new Error("Unauthorized!");

@@ -40,6 +40,12 @@ contract Roomrental is Ownable, ReentrancyGuard {
         uint id;
         uint appartmentId;
         string reviewText;
+        uint value;
+        uint cleanliness;
+        uint accuracy;
+        uint check_in;
+        uint communication;
+        uint location_score;
         uint timestamp;
         address owner;
     }
@@ -293,7 +299,8 @@ contract Roomrental is Ownable, ReentrancyGuard {
         require(success);
     }
 
-    function addReview(uint appartmentId, string memory reviewText) public {
+    function addReview(uint appartmentId, string memory reviewText, uint value, uint cleanliness,
+    uint accuracy, uint check_in, uint communication, uint location_score) public {
         require(appartmentExist[appartmentId],"Appartment not available");
         require(hasReservated[msg.sender][appartmentId],"Book first before review");
         require(bytes(reviewText).length > 0, "Review text cannot be empty");
@@ -303,6 +310,12 @@ contract Roomrental is Ownable, ReentrancyGuard {
         review.id = reviewsOf[appartmentId].length;
         review.appartmentId = appartmentId;
         review.reviewText = reviewText;
+        review.value = value;
+        review.cleanliness = cleanliness;
+        review.accuracy = accuracy;
+        review.check_in = check_in;
+        review.communication = communication;
+        review.location_score = location_score;
         review.timestamp = block.timestamp;
         review.owner = msg.sender;
 

@@ -127,7 +127,7 @@ const RentModal = ({ onCloseModal }: { onCloseModal?: () => void }) => {
     };
     startTransition(async () => {
       try {
-        console.log(params);
+        // console.log(params);
         await createAppartment(params).then(async () => {
           loadAppartments();
           toast.success(`${data.title} added successfully!`);

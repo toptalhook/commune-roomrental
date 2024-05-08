@@ -6,11 +6,15 @@ import Image from "next/image";
 
 import { Rate } from "antd";
 import { Input } from "antd";
-import { useState, useRef } from "react";
+import { useState, useRef, useTransition } from "react";
 import { TextAreaRef } from "antd/es/input/TextArea";
 
 import { createReview } from "@/services/review";
 import Modal from "antd";
+import { addReview } from "@/Blockchain.services";
+import SpinnerMini from "./Loader";
+import toast from "react-hot-toast";
+import { error } from "console";
 
 const { TextArea } = Input;
 
@@ -20,6 +24,8 @@ interface ReviewProps {
 }
 
 const Review: React.FC<ReviewProps> = ({ closeModal, apartmentId }) => {
+  const [isLoading, startTransition] = useTransition();
+
   const description = useRef<TextAreaRef>(null);
   const [cleanliness, setCleanliness] = useState(3);
   const [accuracy, setAccuracy] = useState(3);
@@ -51,20 +57,31 @@ const Review: React.FC<ReviewProps> = ({ closeModal, apartmentId }) => {
     }
   };
 
-  const submit = async () => {
-    const data = {
-      cleanliness: cleanliness,
-      accuracy: accuracy,
-      check_in: check_in,
-      communication: communication,
-      location_score: location_score,
-      value: value,
-      description:
-        description?.current?.resizableTextArea?.textArea.value || "",
-      listingId: apartmentId,
-    };
-    const review = await createReview(data);
-    closeModal();
+  const submit = () => {
+    startTransition(async () => {
+      const data = {
+        id: apartmentId,
+        cleanliness: cleanliness,
+        accuracy: accuracy,
+        check_in: check_in,
+        communication: communication,
+        location_score: location_score,
+        value: value,
+        reviewText:
+          description?.current?.resizableTextArea?.textArea.value || "",
+      };
+      if (description?.current?.resizableTextArea?.textArea.value == "") {
+        alert("please review text!");
+        return;
+      }
+      // const review = await createReview(data);
+      await addReview(data)
+        .then(async () => {
+          closeModal();
+          toast.success("Your review submitted!");
+        })
+        .catch((error) => console.error(error));
+    });
   };
   return (
     <div className="fixed z-50 inset-0 bg-gray-900 bg-opacity-60 w-full px-1 md:px-4">
@@ -187,9 +204,11 @@ const Review: React.FC<ReviewProps> = ({ closeModal, apartmentId }) => {
         <div className="flex items-center justify-center py-[30px] ">
           <button
             onClick={submit}
-            className="bg-blue-700 hover:bg-blue-800 text-white text-[24px] py-1 px-4 border border-blue-700 rounded text-3xl items-center"
+            className="flex bg-blue-700 hover:bg-blue-800 text-white text-center text-[24px] w-[250px] h-[50px] py-1 px-4 border border-blue-700 rounded text-3xl items-center"
           >
-            Submit
+            <p className="mx-auto">
+              {isLoading ? <SpinnerMini /> : <span>Submit</span>}
+            </p>
           </button>
         </div>
       </div>

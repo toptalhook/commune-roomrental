@@ -15,10 +15,15 @@ import { getReviews } from "@/services/review";
 import ReviewItem from "./ReviewItem";
 import ReviewInfo from "./ReviewInfo";
 import Review from "./Review";
+import { useGlobalState } from "@/store";
+import { loadReviews } from "@/Blockchain.services";
 
 export const Reviewdetails = ({ apartmentId }: { apartmentId: string }) => {
+  const [reservated] = useGlobalState("reservated");
+  const [all_reviews] = useGlobalState("reviews");
+
   const [isOpen, setIsOpen] = useState(false);
-  const [reviews, setReviews] = useState<any>([]);
+  const [reviews, setReviews] = useState<any>(all_reviews);
 
   const [scores, setScores] = useState([0.0, 0.0, 0.0, 0.0, 0.0, 0.0]);
   const [total, setTotal] = useState(0.0);
@@ -55,15 +60,20 @@ export const Reviewdetails = ({ apartmentId }: { apartmentId: string }) => {
   };
 
   useEffect(() => {
-    getReviews(apartmentId)
-      .then((data) => {
-        if (!data) throw new Error("No data");
-        setReviews(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-      .finally(() => {});
+    // getReviews(apartmentId)
+    //   .then((data) => {
+    //     if (!data) throw new Error("No data");
+    //     setReviews(data);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   })
+    //   .finally(() => {});
+    async () => {
+      await loadReviews(apartmentId)
+        .then(() => setReviews(all_reviews))
+        .catch((error) => console.error(error));
+    };
   }, []);
 
   useEffect(() => {
@@ -140,12 +150,14 @@ export const Reviewdetails = ({ apartmentId }: { apartmentId: string }) => {
       <ReviewInfo reviews={reviews} scores={scores} total={total} />
       {isOpen && <Review closeModal={closeModal} apartmentId={apartmentId} />}
       <div className="fixed bottom-3 right-3">
-        <button
-          onClick={() => setIsOpen(true)}
-          className="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-full"
-        >
-          Review
-        </button>
+        {reservated && (
+          <button
+            onClick={() => setIsOpen(true)}
+            className="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-full"
+          >
+            Review
+          </button>
+        )}
       </div>
     </div>
   );
