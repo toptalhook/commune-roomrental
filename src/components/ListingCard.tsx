@@ -14,6 +14,7 @@ import ListingMenu from "./ListingMenu";
 import { GrFormNext } from "react-icons/gr";
 import { GrFormPrevious } from "react-icons/gr";
 import { SlLocationPin } from "react-icons/sl";
+import { FaEthereum } from "react-icons/fa";
 
 interface ListingCardProps {
   data: {
@@ -59,7 +60,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
   }
 
   return (
-    <div className="relative shadow-lg md:rounded-b-lg rounded-b-md hover:cursor-pointer">
+    <div className="relative shadow-md w-80 pb-2 rounded-b-2xl mb-20 hover:cursor-pointer">
       <div className="absolute top-0 left-0 p-3 flex items-center justify-between w-full">
         <div className="z-5">
           {/* <ListingMenu id={reservation?.id || data.id} /> */}
@@ -85,9 +86,10 @@ const ListingCard: React.FC<ListingCardProps> = ({
             setShowButton(false);
           }}
         >
-          <div className="aspect-[1/0.95] relative bg-gray-100">
+          <div className="aspect-[380/240] relative bg-gray-100">
             <div onClick={handleClick}>
               <Image
+                className="w-full object-cover"
                 imageSrc={data.images[displayIndex]}
                 fill
                 alt={data.title}
@@ -120,20 +122,29 @@ const ListingCard: React.FC<ListingCardProps> = ({
             )}
           </div>
         </div>
-        <div className="p-[5px]">
-          <span className="font-semibold text-[16px] mt-[4px] flex gap-x-[10px]  items-center">
-            <SlLocationPin />
-            {data?.location[0]}, {data?.location[1]}
-          </span>
-          <span className="font-light text-neutral-500 text-sm">
-            {reservationDate || data.category}
-          </span>
-
-          <div className="flex flex-row items-baseline gap-1">
-            <span className="font-bold text-[#444] text-[14px]">
-              ETH {formatPrice(price)}
+        <div className="py-[5px] px-4">
+          <div className="flex justify-between items-center">
+            <span className="font-semibold text-[16px] mt-[4px] flex gap-x-[10px]  items-center">
+              <SlLocationPin />
+              {data?.location[0]}, {data?.location[1]}
             </span>
-            {!reservations && <span className="font-light">night</span>}
+            <span className="font-light text-neutral-500 text-sm">
+              {data.category}
+            </span>
+          </div>
+
+          <div className="flex justify-between items-center">
+            <span className="font-light text-neutral-500 text-sm">
+              {reservationDate}
+            </span>
+
+            <div className="flex items-center gap-2">
+              <span className="font-bold text-[#444] text-[14px] flex items-center gap-x-[4px]">
+                <FaEthereum size={14} />
+                {formatPrice(price)}
+              </span>
+              {!reservations && <span className="font-light">night</span>}
+            </div>
           </div>
         </div>
       </div>

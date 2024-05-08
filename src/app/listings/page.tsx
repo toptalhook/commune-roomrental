@@ -30,7 +30,7 @@ const Home: FC<HomeProps> = ({ searchParams }) => {
   }
 
   return (
-    <section className=" main-container pt-16 grid  grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-8">
+    <section className="py-8 px-14 flex justify-center flex-wrap space-x-4 w-full">
       {appartments.map((appartment, index) => {
         return (
           <ListingCard

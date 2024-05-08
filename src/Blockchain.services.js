@@ -211,6 +211,7 @@ const loadAppartment = async (id) => {
     const contract = await getEtheriumContract()
     const appartment = await contract.getApartment(id)
     const reservated = await contract.tenantReservated(id)
+    await loadReviews(id)
     setGlobalState('appartment', structureAppartments([appartment])[0])
     setGlobalState('reservated', reservated)
   } catch (error) {

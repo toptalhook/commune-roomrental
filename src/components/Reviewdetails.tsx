@@ -60,15 +60,6 @@ export const Reviewdetails = ({ apartmentId }: { apartmentId: string }) => {
   };
 
   useEffect(() => {
-    // getReviews(apartmentId)
-    //   .then((data) => {
-    //     if (!data) throw new Error("No data");
-    //     setReviews(data);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   })
-    //   .finally(() => {});
     async () => {
       await loadReviews(apartmentId)
         .then(() => setReviews(all_reviews))
