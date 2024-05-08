@@ -15,6 +15,7 @@ const { setGlobalState, useGlobalState, getGlobalState } = createGlobalState({
   all_reservations:[],
   all_hasfavorites:[],
   reservatedAppartments:[],
+  favoritedAppartments:[],
   status: null,
   timestamps: [],
   currentUser: null,

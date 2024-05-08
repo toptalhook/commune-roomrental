@@ -1,7 +1,7 @@
 "use client";
 import React, { FC, useTransition } from "react";
 import { BsThreeDots } from "react-icons/bs";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
@@ -26,6 +26,7 @@ interface ListingMenuProps {
 
 const ListingMenu: FC<ListingMenuProps> = ({ id }) => {
   const pathname = usePathname();
+  const router = useRouter();
 
   const DeleteAppartment = async (id: string) => {
     await deleteAppartment(id)
@@ -33,8 +34,11 @@ const ListingMenu: FC<ListingMenuProps> = ({ id }) => {
       .catch((error) => console.error(error));
   };
 
-  const { mutate: deleteListing } = useMutation({
-    mutationFn: DeleteAppartment,
+  const check_Reservation = async (id: string) => {
+    router.push(`/trips/${id}`);
+  };
+  const { mutate: checkReservation } = useMutation({
+    mutationFn: check_Reservation,
   });
   const { mutate: cancelReservation } = useMutation({
     mutationFn: deleteReservation,
@@ -50,11 +54,11 @@ const ListingMenu: FC<ListingMenuProps> = ({ id }) => {
           await DeleteAppartment(id);
           onModalClose?.();
           toast.success("Apartment successfully deleted!");
-        } else if (pathname === "/trips" || pathname === "/reservations") {
-          cancelReservation(id, {
+        } else if (pathname === "/trips") {
+          checkReservation(id, {
             onSuccess: () => {
               onModalClose?.();
-              toast.success("Reservation successfully cancelled!");
+              // toast.success("Reservation successfully cancelled!");
             },
           });
         }

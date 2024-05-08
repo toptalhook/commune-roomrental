@@ -166,6 +166,8 @@ const loadAppartments = async () => {
       (item) => item.owner === connectedAccount
     );
 
+
+
     const t_reservatedAppartments = [];
     const t_allreservations = [];
     const all_hasfavorites = [];
@@ -189,7 +191,12 @@ const loadAppartments = async () => {
       }
     }
 
+    const favoritedAppartments = appartmentsdata.filter(
+      (item) => all_hasfavorites[item.id - 1] == true
+    );
+
     setGlobalState("reservatedAppartments", t_reservatedAppartments);
+    setGlobalState("favoritedAppartments", favoritedAppartments);
     setGlobalState("all_reservations", t_allreservations);
     setGlobalState("all_hasfavorites", all_hasfavorites);
     setGlobalState("myappartments", myAppartments);
