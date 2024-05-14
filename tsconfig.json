@@ -23,7 +23,7 @@
   },
   "include": [
      "next-env.d.ts", 
-     "**/*.ts", "**/*.tsx", ".next/types/**/*.ts",
+     "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/chats/page.jsx", "src/app/chats/[id]/page.jsx",
      ],
   "exclude": ["node_modules"]
 }

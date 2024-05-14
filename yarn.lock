@@ -774,7 +774,7 @@
   dependencies:
     "@cloudinary/transformation-builder-sdk" "^1.10.0"
 
-"@cometchat-pro/chat@^3.0.13":
+"@cometchat-pro/chat@^3.0.11":
   version "3.0.13"
   resolved "https://registry.yarnpkg.com/@cometchat-pro/chat/-/chat-3.0.13.tgz#eb0f80661ec41d4e02323e5dae963515ec1fe741"
   integrity sha512-Cb3L9lUA+7Dra8gf0gHJJKYhBYnxwLfksTS1WbhL3SchNUvmZOGrDpji3zjkSv+I7E7Hth6gV83SphGXa0Fx1Q==
@@ -10736,6 +10736,11 @@ react-icons@^4.12.0:
   version "4.12.0"
   resolved "https://registry.npmjs.org/react-icons/-/react-icons-4.12.0.tgz"
   integrity sha512-IBaDuHiShdZqmfc/TwHu6+d6k2ltNCf3AszxNmjJc1KUfXdEeRJOKyNvLmAHaarhzGmTSVygNdyu8/opXv2gaw==
+
+react-identicons@^1.2.5:
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/react-identicons/-/react-identicons-1.2.5.tgz#3502249e49d88f4e3500092694410a984bb102fa"
+  integrity sha512-x7prkDoc2pD7wSl2C1pGxS+XAoSdq1ABWJWTBUimVTDVJArKOLd0B4wRUJpDm4r+9y7pgf8ylyPGsmlWSV5n2g==
 
 react-intersection-observer@^9.5.3:
   version "9.8.1"

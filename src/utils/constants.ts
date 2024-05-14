@@ -111,4 +111,8 @@ export const menuItems = [
     label: "My properties",
     path: "/properties",
   },
+  {
+    label: "My Chats",
+    path: "/chats",
+  },
 ];

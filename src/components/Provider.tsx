@@ -8,6 +8,8 @@ import { isWallectConnected, loadAppartments } from "@/Blockchain.services";
 import { useGlobalState, getGlobalState, setGlobalState } from "@/store";
 import { loadavg } from "os";
 
+import { initCometChat } from "@/Chat";
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -23,6 +25,7 @@ const Providers = ({ children }: PropsWithChildren) => {
   const loadData = async () => {
     await isWallectConnected();
     await loadAppartments();
+    await initCometChat();
   };
 
   useEffect(() => {

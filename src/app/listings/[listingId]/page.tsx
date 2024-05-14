@@ -45,7 +45,7 @@ const ListingPage = ({ params: { listingId } }: { params: IParams }) => {
     location,
     category,
     id,
-    user: owner,
+    owner: user,
     price,
     description,
     romms: roomCount,
@@ -53,6 +53,7 @@ const ListingPage = ({ params: { listingId } }: { params: IParams }) => {
     bathrooms: bathroomCount,
   } = appartment;
 
+  console.log(user);
   const tempcategory = categories.find((cate) => cate.label === category);
 
   const latlng = [location[2], location[3]];
@@ -75,9 +76,10 @@ const ListingPage = ({ params: { listingId } }: { params: IParams }) => {
         reservations={reservations}
         user={currentUser}
         title={title}
+        owner={user}
       >
         <ListingInfo
-          user={owner}
+          user={user}
           category={tempcategory}
           description={description}
           roomCount={roomCount}

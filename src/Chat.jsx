@@ -27,7 +27,9 @@ const loginWithCometChat = async () => {
 
   return new Promise(async (resolve, reject) => {
     await CometChat.login(UID, authKey)
-      .then((user) => resolve(user))
+      .then((user) => {
+        resolve(user);
+      })
       .catch((error) => reject(error));
   });
 };
