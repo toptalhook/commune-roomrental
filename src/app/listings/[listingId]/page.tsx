@@ -48,7 +48,7 @@ const ListingPage = ({ params: { listingId } }: { params: IParams }) => {
     owner: user,
     price,
     description,
-    romms: roomCount,
+    rooms: roomCount,
     guests: guestCount,
     bathrooms: bathroomCount,
   } = appartment;
