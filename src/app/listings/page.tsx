@@ -18,8 +18,7 @@ interface HomeProps {
 const Home: FC<HomeProps> = ({ searchParams }) => {
   const [appartments] = useGlobalState("appartments");
   const [all_hasfavorites] = useGlobalState("all_hasfavorites");
-  // const favorites = await getFavorites();
-  // console.log(favorites)
+
   if (!appartments || appartments.length === 0) {
     return (
       <EmptyState
@@ -29,6 +28,7 @@ const Home: FC<HomeProps> = ({ searchParams }) => {
     );
   }
 
+  console.log("search", searchParams);
   return (
     <section className="py-8 px-14 flex justify-center flex-wrap space-x-4 w-full">
       {appartments.map((appartment, index) => {

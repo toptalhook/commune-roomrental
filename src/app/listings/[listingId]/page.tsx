@@ -26,10 +26,12 @@ const ListingPage = ({ params: { listingId } }: { params: IParams }) => {
   const [reservations] = useGlobalState("reservations");
   const [currentUser] = useGlobalState("connectedAccount");
 
+  const router = useRouter();
   useEffect(() => {
     const init = async () => {
       await loadAppartment(listingId);
       await getReservations(listingId);
+      router.refresh();
       const user = await getCurrentUser();
     };
     init();

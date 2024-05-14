@@ -10,6 +10,7 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@cometchat-pro/chat": "^3.0.13",
     "@edgestore/react": "^0.1.6",
     "@edgestore/server": "^0.1.6",
     "@faker-js/faker": "7.6.0",
