@@ -5,7 +5,7 @@ import { Toaster } from "react-hot-toast";
 import { SessionProvider } from "next-auth/react";
 
 import { isWallectConnected, loadAppartments } from "@/Blockchain.services";
-import { useGlobalState, getGlobalState, setGlobalState } from "@/store";
+import { useGlobalState } from "@/store";
 import { loadavg } from "os";
 
 import { initCometChat } from "@/Chat";
@@ -20,7 +20,7 @@ const queryClient = new QueryClient({
 
 const Providers = ({ children }: PropsWithChildren) => {
   const [connectedAccount] = useGlobalState("connectedAccount");
-  const [all_reservations] = useGlobalState("all_hasfavorites");
+  const [all_reservations] = useGlobalState("myappartments");
 
   const loadData = async () => {
     await isWallectConnected();
@@ -32,13 +32,11 @@ const Providers = ({ children }: PropsWithChildren) => {
     loadData();
   }, [connectedAccount]);
 
-  // console.log(all_reservations);
+  console.log(all_reservations);
   return (
     <QueryClientProvider client={queryClient}>
-      <SessionProvider>
-        <Toaster position="bottom-right" />
-        {children}
-      </SessionProvider>
+      <Toaster position="bottom-right" />
+      {children}
     </QueryClientProvider>
   );
 };

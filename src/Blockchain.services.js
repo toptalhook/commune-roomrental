@@ -186,8 +186,10 @@ const loadAppartments = async () => {
       else all_hasfavorites.push(structedFavorites([favorites])[0].hasfavorited)
       // console.log(structedFavorites([favorites])[0].guest, '-------------')
       if (structuredReservations(reservation).length !== 0) {
-        t_reservatedAppartments.push(item);
-        t_allreservations.push(structuredReservations(reservation));
+        if (structuredReservations(reservation)[0].tenant == connectedAccount) {
+          t_reservatedAppartments.push(item);
+          t_allreservations.push(structuredReservations(reservation));
+        }
       }
     }
 

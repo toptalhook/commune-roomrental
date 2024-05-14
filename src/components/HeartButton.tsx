@@ -19,7 +19,6 @@ const HeartButton: React.FC<HeartButtonProps> = ({
   listingId,
   hasFavorited: initialValue,
 }) => {
-  const { status } = useSession();
   const [hasFavorited, setHasFavorited] = useState(initialValue);
   const hasFavoritedRef = useRef(initialValue);
   const favorite = async ({
