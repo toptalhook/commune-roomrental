@@ -53,7 +53,6 @@ const ListingPage = ({ params: { listingId } }: { params: IParams }) => {
     bathrooms: bathroomCount,
   } = appartment;
 
-  console.log(user);
   const tempcategory = categories.find((cate) => cate.label === category);
 
   const latlng = [location[2], location[3]];

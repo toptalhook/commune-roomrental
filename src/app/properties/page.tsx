@@ -37,7 +37,7 @@ const PropertiesPage = () => {
   return (
     <section className="main-container">
       <Heading title="Properties" subtitle="List of your properties" backBtn />
-      <div className=" mt-8 md:mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 md:gap-8 gap-4">
+      <div className=" py-8 px-14 flex justify-start flex-wrap space-x-4 w-full">
         {myappartments.map((myappartment, index) => {
           // const hasFavorited = favorites.includes(listing.id);
           return (

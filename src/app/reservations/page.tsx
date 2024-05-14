@@ -38,7 +38,7 @@ const ReservationPage = () => {
         subtitle="Reservatoins on your properties"
         backBtn
       />
-      <div className=" mt-8 md:mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 md:gap-8 gap-4">
+      <div className="py-8 px-14 flex justify-start flex-wrap space-x-4 w-full">
         {reservatedAppartments.map((reservatedAppartment, index) => {
           // const { reservation, ...data } = listing;
           // const hasFavorited = favorites.includes(listing.id);

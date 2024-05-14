@@ -33,7 +33,7 @@ const FavoritesPage = () => {
   return (
     <section className="main-container">
       <Heading title="Favorites" subtitle="List of places you favorited!" />
-      <div className=" main-container pt-6 grid  grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-8">
+      <div className=" main-container py-8 px-14 flex justify-start flex-wrap space-x-4 w-full">
         {favoritedAppartments.map((favoritedAppartment, index) => {
           return (
             <ListingCard key={index} data={favoritedAppartment} hasFavorited />
